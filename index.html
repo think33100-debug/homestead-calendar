@@ -92,9 +92,9 @@
   .out{position:absolute;font-size:11px;line-height:1;z-index:2;pointer-events:none}
   .legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--muted);padding:10px 18px 4px}
   .note{font-size:11px;color:#a3a7ae;padding:2px 18px 4px;line-height:1.5}
-  .stamp{font-size:11px;color:#b5b9c0;text-align:center;padding:10px 0 40px}
+  .stamp{font-size:11px;color:#b5b9c0;text-align:center;padding:10px 0 90px}
 
-  .toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#222;color:#fff;font-size:13px;
+  .toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translateX(-50%);background:#222;color:#fff;font-size:13px;
          padding:8px 14px;border-radius:999px;opacity:0;transition:.2s;z-index:60;pointer-events:none;white-space:nowrap}
   .toast.on{opacity:1}
 
@@ -122,6 +122,27 @@
 
   @media (min-width:600px){ .tiles{grid-template-columns:repeat(4,1fr)} }
 
+  .fab{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:30;background:var(--blue);color:#fff;
+       font-weight:800;font-size:15px;padding:13px 18px;border-radius:999px;box-shadow:0 6px 18px rgba(21,101,255,.35)}
+  .fab:active{transform:scale(.97)}
+  .bar.man{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.18) 0 6px,transparent 6px 12px)}
+  .fm label{display:block;font-size:13px;font-weight:700;color:#444;margin:14px 0 6px}
+  .fm input{width:100%;font:inherit;font-size:16px;padding:11px 12px;border:1px solid #d8dbe0;border-radius:11px;background:#fff;color:var(--text)}
+  .fm .row{display:grid;grid-template-columns:1.3fr 1fr;gap:8px}
+  .rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .rooms .fl2{grid-column:1/-1;font-size:12px;font-weight:800;color:#666;margin-top:2px}
+  .rooms button{padding:11px 0;border-radius:10px;font-weight:800;font-size:14px;background:#f1f2f4;color:var(--rc);border:2px solid transparent}
+  .rooms button.on{background:var(--rc);color:#fff}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chips button{padding:8px 13px;border-radius:999px;background:#f1f2f4;font-weight:700;font-size:13px}
+  .chips button.on{background:#1b1d22;color:#fff}
+  .acts{display:flex;gap:6px;margin-top:10px}
+  .acts button{flex:1;padding:10px;border-radius:10px;font-weight:700;font-size:13px;background:#f1f2f4}
+  .acts button.del{color:#c62e22;background:#fff0ee}
+  .edit{display:none;margin-top:10px;gap:6px;align-items:center}
+  .edit.on{display:flex}
+  .edit input{flex:1;font:inherit;font-size:15px;padding:9px 10px;border:1px solid #d8dbe0;border-radius:10px}
+  .edit button{padding:10px 14px;border-radius:10px;background:var(--blue);color:#fff;font-weight:700;font-size:13px}
   .install{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;z-index:55;
            background:#1b1d22;color:#fff;border-radius:16px;padding:14px;display:none;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
   .install.on{display:flex}
@@ -150,6 +171,7 @@
   <p class="note">벤디트 키오스크에서 입실 인증한 손님만 표시됩니다. 앞으로의 일정은 현재 묵고 계신 손님의 퇴실 예정만 보입니다.</p>
   <div class="stamp" id="stamp"></div>
 </div>
+<button class="fab" id="fab">＋ 입실 추가</button>
 <div class="sheet-bg" id="bg"></div>
 <div class="sheet" id="sheet"></div>
 <div class="toast" id="toast"></div>
@@ -192,6 +214,7 @@ const mdw = s => `${md(s)}(${W[parse(s).getDay()]})`;
 const longDT = s => s ? `${+s.slice(5,7)}월 ${+s.slice(8,10)}일(${W[parse(s.slice(0,10)).getDay()]}) ${s.slice(11)}` : '-';
 const hm = s => (s || '').slice(11);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const isMan = v => String(v.id || '').startsWith('M');
 const hasCar = v => { const c = String(v.car || '').trim(); return !!c && !/없음|미방문|^-$/.test(c); };
 const css = v => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(v));
 function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1800); }
@@ -321,7 +344,7 @@ function renderTimeline(){
     if (x2 > x1) {
       const el = document.createElement('div');
       const w = (x2 - x1) * colW - 2, n = diff(v.ci, v.co);
-      el.className = 'bar' + (s + IN < 0 ? ' contL' : '');
+      el.className = 'bar' + (s + IN < 0 ? ' contL' : '') + (isMan(v) ? ' man' : '');
       el.style.cssText = `left:${left + x1*colW + 1}px;width:${w}px;top:${top + rowH - 28 - 6}px;background:${RC[v.room]}`;
       el.innerHTML = (hasCar(v) ? '🚗' : '') + (w < 76 ? `${n}박` : `${esc(hm(v.inAt))}<span class="sub">${n}박</span>`);
       el.onclick = () => openStay(v);
@@ -338,17 +361,37 @@ function renderTimeline(){
 }
 
 // ── 상세 ──
+let CARDS = [];
 function stayCard(v, title){
-  return `<div class="sc"><div class="tt">${title}</div><dl class="kv">
+  const k = CARDS.push(v) - 1;
+  return `<div class="sc"><div class="tt">${title}${isMan(v) ? ' <span class="tag wait" style="margin-left:4px">직접 등록</span>' : ''}</div><dl class="kv">
     <dt>입실</dt><dd>${esc(longDT(v.inAt))}</dd>
     <dt>퇴실 예정</dt><dd>${esc(longDT(v.outAt))}</dd>
     <dt>숙박</dt><dd>${diff(v.ci, v.co)}박</dd>
     <dt>차량</dt><dd>${hasCar(v) ? '🚗 ' + esc(v.car) : '등록 안 함'}</dd>
     <dt>입실 구분</dt><dd>${esc(v.kind || '-')}</dd>
-    <dt>벤디트 번호</dt><dd>${esc(v.id || '-')}</dd></dl></div>`;
+    <dt>${isMan(v) ? '등록 번호' : '벤디트 번호'}</dt><dd>${esc(v.id || '-')}</dd></dl>
+    <div class="acts"><button data-ed="${k}">퇴실일 변경</button>${isMan(v) ? `<button class="del" data-del="${k}">삭제</button>` : ''}</div>
+    <div class="edit" id="ed${k}"><input type="date" value="${v.co}" min="${ymd(addD(parse(v.ci),1))}"><button data-sv="${k}">저장</button></div></div>`;
+}
+function bindCards(){
+  document.querySelectorAll('[data-ed]').forEach(b => b.onclick = () => $('ed' + b.dataset.ed).classList.toggle('on'));
+  document.querySelectorAll('[data-sv]').forEach(b => b.onclick = async () => {
+    const v = CARDS[b.dataset.sv], co = $('ed' + b.dataset.sv).querySelector('input').value;
+    if (!co || co <= v.ci) return toast('퇴실일을 확인해 주세요');
+    try { await call('update', { id: v.id, room: v.room, ci: v.ci, f: { co } }); toast('퇴실일을 변경했습니다'); closeSheet(); load(); }
+    catch(e){ toast('변경하지 못했습니다'); }
+  });
+  document.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+    const v = CARDS[b.dataset.del];
+    if (!confirm(`${v.room} ${mdw(v.ci)} 직접 등록 기록을 삭제하시겠습니까?`)) return;
+    try { await call('delete', { id: v.id, room: v.room, ci: v.ci }); toast('삭제했습니다'); closeSheet(); load(); }
+    catch(e){ toast('삭제하지 못했습니다'); }
+  });
 }
 function sheetHead(room, tagHtml){ return `<div class="grab"></div><div class="sh"><span class="sq" style="background:${RC[room]}"></span><h3>${room}</h3>${tagHtml||''}</div>`; }
 function openRoom(room, x){
+  CARDS = [];
   const tag = { clean:'<span class="tag clean">🧹 오늘 청소</span>', stay:'<span class="tag stay">⛔ 연박 중</span>',
                 done:'<span class="tag done">✓ 입실 완료</span>', wait:'<span class="tag wait">체크인 전</span>' }[x.key];
   let body = '';
@@ -356,13 +399,66 @@ function openRoom(room, x){
   if (x.stay) body += stayCard(x.stay, '⛔ 묵고 계신 손님 (출입금지)');
   if (x.inn)  body += stayCard(x.inn, `✓ 오늘 ${hm(x.inn.inAt)}에 입실한 손님`);
   if (!x.inn && !x.stay) body += `<div class="sc"><div class="tt">오늘(${md(TODAY)}) 아직 체크인 전입니다</div>
-    <div style="font-size:13px;color:var(--muted);line-height:1.5">손님이 키오스크에서 입실 인증을 하시면 자동으로 표시됩니다.</div></div>`;
-  openSheet(sheetHead(room, tag) + body + '<button class="btn" id="cls">닫기</button>');
+    <div style="font-size:13px;color:var(--muted);line-height:1.5">손님이 키오스크에서 입실 인증을 하시면 자동으로 표시됩니다.<br>키오스크를 거치지 않고 입실하셨다면 아래에서 직접 추가해 주세요.</div></div>`;
+  openSheet(sheetHead(room, tag) + body + (!x.inn && !x.stay ? `<button class="btn primary" id="addHere">＋ ${room} 입실 추가</button>` : '') + '<button class="btn" id="cls">닫기</button>');
+  if ($('addHere')) $('addHere').onclick = () => openAdd(room);
 }
-function openStay(v){ openSheet(sheetHead(v.room) + stayCard(v, `${mdw(v.ci)} 입실 손님`) + '<button class="btn" id="cls">닫기</button>'); }
-function openSheet(html){ $('sheet').innerHTML = html; $('cls').onclick = closeSheet; $('bg').classList.add('on'); $('sheet').classList.add('on'); }
+function openStay(v){ CARDS = []; openSheet(sheetHead(v.room) + stayCard(v, `${mdw(v.ci)} 입실 손님`) + '<button class="btn" id="cls">닫기</button>'); }
+function openSheet(html){ $('sheet').innerHTML = html; $('cls').onclick = closeSheet; bindCards(); CARDS = CARDS; $('bg').classList.add('on'); $('sheet').classList.add('on'); }
 function closeSheet(){ $('bg').classList.remove('on'); $('sheet').classList.remove('on'); }
 $('bg').onclick = closeSheet;
+
+// ── 직접 입실 추가 ──
+function openAdd(room){
+  const now = new Date(), t = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  const F = { room: room || '', ci: TODAY, inT: t, co: ymd(addD(parse(TODAY), 1)), outT: '11:00', car: '', memo: '' };
+  CARDS = [];
+  $('sheet').innerHTML = `<div class="grab"></div><div class="sh"><h3>입실 직접 추가</h3></div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.5">키오스크를 거치지 않고 입실한 손님을 등록합니다.</p>
+    <div class="fm">
+      <label>객실</label>
+      <div class="rooms">${FLOORS.map(f => `<div class="fl2">${f.name}</div>` + f.rooms.map(r =>
+        `<button data-r="${r}" style="--rc:${RC[r]}" class="${r===F.room?'on':''}">${r.replace('호','')}</button>`).join('')).join('')}</div>
+      <label>입실</label>
+      <div class="row"><input type="date" id="fCi" value="${F.ci}"><input type="time" id="fInT" value="${F.inT}"></div>
+      <label>숙박</label>
+      <div class="chips" id="fN">${[1,2,3,4,5].map(n => `<button data-n="${n}" class="${n===1?'on':''}">${n}박</button>`).join('')}</div>
+      <label>퇴실 예정</label>
+      <div class="row"><input type="date" id="fCo" value="${F.co}"><input type="time" id="fOutT" value="${F.outT}"></div>
+      <label>차량번호 (선택)</label>
+      <input id="fCar" placeholder="예) 12가3456" autocomplete="off">
+      <label>메모 (선택)</label>
+      <input id="fMemo" placeholder="예) 전화 예약, 현장 결제" maxlength="40" autocomplete="off">
+    </div>
+    <button class="btn primary" id="fGo" style="margin-top:18px">등록하기</button>
+    <button class="btn" id="cls">취소</button>`;
+  $('cls').onclick = closeSheet;
+  $('bg').classList.add('on'); $('sheet').classList.add('on');
+  document.querySelectorAll('.rooms [data-r]').forEach(b => b.onclick = () => {
+    F.room = b.dataset.r; document.querySelectorAll('.rooms [data-r]').forEach(x => x.classList.toggle('on', x === b)); });
+  const setN = n => { $('fCo').value = ymd(addD(parse($('fCi').value), n));
+    document.querySelectorAll('#fN [data-n]').forEach(x => x.classList.toggle('on', +x.dataset.n === n)); };
+  document.querySelectorAll('#fN [data-n]').forEach(b => b.onclick = () => setN(+b.dataset.n));
+  $('fCi').onchange = () => { const on = document.querySelector('#fN .on'); setN(on ? +on.dataset.n : 1); };
+  $('fCo').onchange = () => { const n = diff($('fCi').value, $('fCo').value);
+    document.querySelectorAll('#fN [data-n]').forEach(x => x.classList.toggle('on', +x.dataset.n === n)); };
+  $('fGo').onclick = async () => {
+    const f = { room: F.room, ci: $('fCi').value, inT: $('fInT').value, co: $('fCo').value, outT: $('fOutT').value,
+                car: $('fCar').value.trim(), memo: $('fMemo').value.trim() };
+    if (!f.room) return toast('객실을 선택해 주세요');
+    if (!f.ci || !f.co || f.co <= f.ci) return toast('입실·퇴실 날짜를 확인해 주세요');
+    const btn = $('fGo'); btn.disabled = true; btn.textContent = '등록 중입니다…';
+    try { await call('add', { f }); }
+    catch(e){
+      const m = String(e.message || '');
+      if (m.startsWith('겹침:') && confirm(`${f.room}에 이미 ${m.slice(3).replace('~',' ~ ')} 입실 기록이 있습니다.\n그래도 등록하시겠습니까?`)) {
+        try { await call('add', { f: Object.assign(f, { force: true }) }); } catch(e2){ btn.disabled = false; btn.textContent = '등록하기'; return toast('등록하지 못했습니다'); }
+      } else { btn.disabled = false; btn.textContent = '등록하기'; return toast(m.startsWith('겹침:') ? '등록을 취소했습니다' : '등록하지 못했습니다'); }
+    }
+    toast(`${f.room} 입실을 등록했습니다`); closeSheet(); load();
+  };
+}
+$('fab').onclick = () => openAdd('');
 
 // ── 로그인 ──
 function showLogin(msg){
@@ -385,7 +481,9 @@ $('btnSync').onclick = async () => { toast('새로고침 중입니다'); try { a
 document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('login')) load(); });
 
 // ── 데모 (?demo) — 가상의 데이터 ──
+let MOCK_LIST = null;
 const MOCK = {
+  add: () => true, update: () => true, delete: () => true,
   data: () => {
     const t = new Date(), D = n => ymd(addD(t, n));
     let i = 0;
@@ -395,7 +493,8 @@ const MOCK = {
       list: [ V('101호',-1,0,'20:10'), V('101호',0,1,'15:12','12가3456'), V('101호',-3,-1,'16:30'),
               V('102호',-2,1,'15:40','34나5678'), V('103호',-1,0,'22:05'),
               V('104호',0,2,'15:20'), V('201호',-1,0,'19:20','56다7890'), V('201호',-3,-1,'18:00'),
-              V('202호',-3,2,'17:45'), V('203호',-3,-2,'21:10'), V('204호',-2,0,'23:40'), V('204호',0,1,'16:00') ] };
+              V('202호',-3,2,'17:45'), V('203호',-3,-2,'21:10'), V('204호',-2,0,'23:40'), V('204호',0,1,'16:00'),
+              Object.assign(V('203호',-6,-5,'16:00'), { id: 'M00000001', kind: '직접등록 · 전화 예약' }) ] };
   }
 };
 
