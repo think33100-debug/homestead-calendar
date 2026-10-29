@@ -7,7 +7,16 @@
 <meta name="theme-color" content="#f4f5f7">
 <title>홈스테드 청소 일정</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%231565ff%22/%3E%3Cpath d=%22M14 30 32 15l18 15v19H38V37H26v12H14z%22 fill=%22white%22/%3E%3C/svg%3E">
-<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="홈스테드 청소">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
   :root{ --bg:#f4f5f7; --card:#fff; --line:#e9eaee; --muted:#8b8f98; --text:#1b1d22; --blue:#1565ff;
          --clean:#1565ff; --stay:#e8590c; --done:#0f9d58; --wait:#9aa0a8; --sun:#e0402f;
@@ -107,6 +116,16 @@
   .err{color:#c62e22;font-size:13px;margin-top:10px;min-height:18px;text-align:center}
 
   @media (min-width:600px){ .tiles{grid-template-columns:repeat(4,1fr)} }
+
+  .install{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;z-index:55;
+           background:#1b1d22;color:#fff;border-radius:16px;padding:14px;display:none;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+  .install.on{display:flex}
+  .install img{width:44px;height:44px;border-radius:11px;flex:none}
+  .install .tx{flex:1;font-size:13px;line-height:1.45} .install .tx b{font-size:15px;display:block}
+  .install .ib{display:flex;flex-direction:column;gap:6px}
+  .install button{font-size:13px;font-weight:700;padding:8px 12px;border-radius:10px;background:var(--blue);color:#fff;white-space:nowrap}
+  .install button.no{background:transparent;color:#aab;padding:4px}
+  .loading{opacity:.55;transition:opacity .2s}
 </style>
 </head>
 <body>
@@ -129,6 +148,11 @@
 <div class="sheet-bg" id="bg"></div>
 <div class="sheet" id="sheet"></div>
 <div class="toast" id="toast"></div>
+<div class="install" id="install">
+  <img src="icon-192.png" alt="">
+  <div class="tx" id="instTx"><b>앱으로 설치하시겠습니까?</b>홈 화면에 추가하면 앱처럼 바로 열 수 있습니다.</div>
+  <div class="ib"><button id="instYes">설치</button><button class="no" id="instNo">나중에</button></div>
+</div>
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbwRayqUibLasSQ94BUbcrCfeskmmLYZgy0pmalKYSCtQtiZqIS8EGwxwWcU2mn9-5yDsg/exec';
@@ -180,13 +204,27 @@ async function call(action, extra){
   return j.data;
 }
 
+// 마지막으로 받은 데이터를 폰에 저장 → 다음에 열 때 바로 표시하고 뒤에서 최신으로 교체
+const CACHE_KEY = 'hs_cache_v1';
+function readCache(){ try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch(_) { return null; } }
+function writeCache(d){ try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch(_){} }
+function apply(d){ LIST = d.list || []; TODAY = d.today || TODAY; NOW = d.now || ''; render(); }
+
+let firstPaint = false;
 async function load(){
+  if (!firstPaint && !DEMO && store.get('key')) {
+    const c = readCache();
+    if (c && c.today === ymd(new Date())) { apply(c); $('app').classList.add('loading'); }
+    firstPaint = true;
+  }
   const start = ymd(addD(parse(TODAY), -PAST)), end = ymd(addD(parse(TODAY), DAYS - PAST));
   try {
     const d = await call('data', { from: start, to: end });
-    LIST = d.list || []; TODAY = d.today || TODAY; NOW = d.now || '';
-    render();
+    if (!DEMO) writeCache(d);
+    apply(d);
+    $('app').classList.remove('loading');
   } catch(err){
+    $('app').classList.remove('loading');
     if (err.message === 'key' || err.message === 'nocfg') return showLogin(err.message === 'key' ? '비밀번호가 맞지 않습니다.' : '');
     if (err.message === 'locked') return showLogin('비밀번호를 여러 번 틀려 10분간 잠겼습니다.');
     toast('불러오지 못했습니다'); console.error(err);
@@ -336,7 +374,7 @@ function showLogin(msg){
   $('cKey').onkeydown = e => { if (e.key === 'Enter') go(); };
   setTimeout(() => $('cKey').focus(), 50);
 }
-$('btnOut').onclick = () => { if (confirm('로그아웃하시겠습니까?')) { store.del('key'); showLogin(''); } };
+$('btnOut').onclick = () => { if (confirm('로그아웃하시겠습니까?')) { store.del('key'); try { localStorage.removeItem(CACHE_KEY); } catch(_){} showLogin(''); } };
 $('btnSync').onclick = async () => { toast('새로고침 중입니다'); try { await call('sync'); await load(); toast('최신 상태입니다'); } catch(e){ toast('새로고침하지 못했습니다'); } };
 document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('login')) load(); });
 
@@ -354,6 +392,31 @@ const MOCK = {
               V('202호',-3,2,'17:45'), V('203호',-3,-2,'21:10'), V('204호',-2,0,'23:40'), V('204호',0,1,'16:00') ] };
   }
 };
+
+// ── 앱 설치 (홈 화면 추가) ──
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+(function installPrompt(){
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (standalone || DEMO) return;
+  const until = +(localStorage.getItem('hs_inst_skip') || 0);
+  if (Date.now() < until) return;
+  const box = $('install'), skip = () => { box.classList.remove('on'); try { localStorage.setItem('hs_inst_skip', Date.now() + 7*864e5); } catch(_){} };
+  $('instNo').onclick = skip;
+  let deferred = null;
+  // 안드로이드 크롬·삼성인터넷: 설치 창 바로 띄우기
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault(); deferred = e; box.classList.add('on');
+    $('instYes').onclick = async () => { box.classList.remove('on'); deferred.prompt(); await deferred.userChoice.catch(()=>{}); deferred = null; };
+  });
+  window.addEventListener('appinstalled', () => { box.classList.remove('on'); toast('설치되었습니다'); });
+  // 아이폰 사파리: 자동 설치창이 없어 방법 안내
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (ios) {
+    $('instTx').innerHTML = '<b>홈 화면에 추가하시겠습니까?</b>아래 <b style="display:inline">공유 버튼(□↑)</b> → <b style="display:inline">홈 화면에 추가</b>를 눌러 주세요.';
+    $('instYes').textContent = '확인'; $('instYes').onclick = skip;
+    setTimeout(() => box.classList.add('on'), 1200);
+  }
+})();
 
 load();
 </script>
