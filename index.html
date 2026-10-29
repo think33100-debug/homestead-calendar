@@ -5,126 +5,106 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#ffffff">
-<title>홈스테드 예약</title>
+<title>홈스테드 입실현황</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%231565ff%22/%3E%3Cpath d=%22M14 30 32 15l18 15v19H38V37H26v12H14z%22 fill=%22white%22/%3E%3C/svg%3E">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
 <style>
-  :root{
-    --bg:#fff; --line:#ececec; --muted:#9a9a9a; --text:#222; --blue:#1565ff; --sun:#e0402f; --sat:#1565ff;
-    --past:#f7f7f7; --lane:22px;
-  }
+  :root{ --bg:#fff; --line:#ececec; --muted:#9a9a9a; --text:#1d1d1f; --blue:#1565ff; --sun:#e0402f;
+         --today:#eef4ff; --past:#fafafa; --col:56px; --rowh:50px; --head:58px; }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--text);font-family:Pretendard,-apple-system,'Apple SD Gothic Neo',sans-serif;-webkit-text-size-adjust:100%}
   button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 
-  header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line)}
-  .top{display:flex;align-items:center;gap:6px;padding:12px 12px 8px}
-  .top h1{font-size:20px;font-weight:800;letter-spacing:-.5px;margin-right:auto}
-  .ibtn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:18px;color:#333}
+  header{display:flex;align-items:center;gap:4px;padding:14px 12px 10px}
+  header h1{font-size:20px;font-weight:800;letter-spacing:-.5px;margin-right:auto}
+  header small{font-size:12px;color:var(--muted);font-weight:500;margin-left:6px}
+  .ibtn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:18px;color:#333}
   .ibtn:active{background:#f1f1f1}
-  .nav{display:flex;align-items:center;gap:4px;padding:0 12px 8px}
-  .nav .ym{font-size:17px;font-weight:700;min-width:96px;text-align:center}
-  .chip{padding:5px 10px;border-radius:999px;border:1px solid #ddd;font-size:13px}
-  .chip.on{background:#222;color:#fff;border-color:#222}
-  .legend{display:flex;gap:4px;padding:0 12px 8px;overflow-x:auto;scrollbar-width:none}
-  .legend span{flex:none;font-size:11px;padding:2px 7px;border-radius:999px;color:#fff;font-weight:600}
-  .dow{display:grid;grid-template-columns:repeat(7,1fr);font-size:12px;color:var(--muted);text-align:center;padding:4px 0}
-  .dow div:first-child{color:var(--sun)} .dow div:last-child{color:var(--sat)}
 
-  .week{border-bottom:1px solid var(--line);position:relative}
-  .week.past{background:var(--past)}
-  .days{display:grid;grid-template-columns:repeat(7,1fr);position:absolute;inset:0;pointer-events:none}
-  .days div{border-right:1px solid var(--line)} .days div:last-child{border-right:0}
-  .nums{display:grid;grid-template-columns:repeat(7,1fr);position:relative;padding:8px 0 4px}
-  .nums div{padding-left:10px;font-size:17px;font-weight:500}
-  .nums .sun{color:var(--sun)} .nums .sat{color:var(--sat)} .nums .dim{opacity:.35}
-  .nums .today span{background:var(--blue);color:#fff;border-radius:50%;width:30px;height:30px;display:inline-grid;place-items:center;margin-left:-6px}
-  .lanes{position:relative;padding-bottom:8px}
-  .lane{position:relative;height:var(--lane);margin-bottom:3px}
-  .bar{position:absolute;top:0;height:100%;display:flex;align-items:center;padding:0 6px 0 9px;
-       color:#fff;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-       border-radius:11px 3px 3px 11px;cursor:pointer;line-height:1}
-  .bar.contL{border-top-left-radius:0;border-bottom-left-radius:0;padding-left:5px}
-  .bar.contR{border-top-right-radius:0;border-bottom-right-radius:0}
-  .bar .t{overflow:hidden;text-overflow:ellipsis}
-  .bar .pf{font-size:10px;opacity:.85;margin-right:2px;font-weight:700}
-  .bar.short{font-size:11px;padding:0 3px 0 6px;letter-spacing:-.4px}
-  .bar.cancel{background:#d5d5d5!important;color:#777;text-decoration:line-through}
-  .bar.flag{outline:2px dashed #ff3b30;outline-offset:-2px}
-  .bar.clash{box-shadow:0 0 0 2px #ff3b30 inset}
-  .bar.unassigned{background:#fff!important;color:#333;border:1.5px solid #333}
-  .roomtag{position:absolute;left:2px;top:3px;font-size:9px;color:var(--muted);pointer-events:none}
-  .collapse{display:block;width:100%;padding:8px;font-size:13px;color:#666;text-align:center;border-bottom:1px solid var(--line);background:#fafafa}
-  .empty{font-size:12px;color:#bbb;padding:2px 10px 8px}
+  .today{margin:0 12px 12px;border-radius:16px;background:#f6f7f9;padding:14px}
+  .today h2{font-size:14px;font-weight:700;color:#555;margin-bottom:10px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .card{background:#fff;border-radius:12px;padding:10px 12px}
+  .card .k{font-size:12px;color:#888;font-weight:600}
+  .card .v{font-size:22px;font-weight:800;margin:2px 0 6px}
+  .card .rs{display:flex;flex-wrap:wrap;gap:4px}
+  .card .rs span{font-size:12px;font-weight:700;padding:3px 7px;border-radius:7px;background:#f1f1f1}
+  .card.clean .v{color:var(--blue)} .card.clean .rs span{background:#e8f0ff;color:var(--blue)}
+  .card.stay  .v{color:#d9480f}     .card.stay .rs span{background:#fff0e6;color:#d9480f}
+  .card.next  .v{color:#5b6bd6}     .card.next .rs span{background:#eef0ff;color:#5b6bd6}
+  .card .none{font-size:12px;color:#bbb}
 
-  .fab{position:fixed;right:16px;bottom:20px;width:56px;height:56px;border-radius:50%;background:var(--blue);color:#fff;
-       font-size:28px;box-shadow:0 6px 18px rgba(21,101,255,.35);z-index:30}
-  .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#222;color:#fff;font-size:13px;
+  .tl-wrap{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tl-wrap::-webkit-scrollbar{display:none}
+  .tl{display:grid;grid-template-columns:60px repeat(14, var(--col));position:relative;width:max-content}
+  .cell{height:var(--rowh);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .cell.past{background:var(--past)} .cell.t{background:var(--today)}
+  .hd{height:var(--head);display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:11px;color:var(--muted);background:#fff}
+  .hd b{font-size:16px;color:var(--text);font-weight:600;line-height:1.3}
+  .hd.sun,.hd.sun b{color:var(--sun)} .hd.sat,.hd.sat b{color:var(--blue)}
+  .hd.t b{background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center}
+  .rm{position:sticky;left:0;z-index:3;background:#fff;height:var(--rowh);display:flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:14px;border-right:1px solid #ddd;border-bottom:1px solid var(--line)}
+  .rm .dot{width:8px;height:8px;border-radius:50%;margin-right:5px}
+  .corner{position:sticky;left:0;z-index:4;background:#fff;height:var(--head);border-right:1px solid #ddd;border-bottom:1px solid var(--line)}
+
+  .bar{position:absolute;height:28px;border-radius:8px;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;
+       padding:0 7px;white-space:nowrap;overflow:hidden;z-index:2;cursor:pointer;line-height:1}
+  .bar.contL{border-top-left-radius:0;border-bottom-left-radius:0}
+  .bar .sub{font-weight:500;opacity:.85;margin-left:4px}
+  .out{position:absolute;font-size:11px;line-height:1;z-index:2;pointer-events:none}
+  .bar.narrow{padding:0 5px;font-size:11px}
+
+  .legend{display:flex;gap:12px;font-size:12px;color:#777;padding:10px 14px}
+  .stamp{font-size:11px;color:#bbb;text-align:center;padding:8px 0 40px}
+  .toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#222;color:#fff;font-size:13px;
          padding:8px 14px;border-radius:999px;opacity:0;transition:.2s;z-index:60;pointer-events:none}
   .toast.on{opacity:1}
 
   .sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:40;display:none}
-  .sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;z-index:50;
-         max-height:86vh;overflow:auto;padding:18px 18px 28px;transform:translateY(100%);transition:.22s}
+  .sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;z-index:50;padding:20px 18px 28px;transform:translateY(100%);transition:.22s}
   .sheet.on{transform:none} .sheet-bg.on{display:block}
-  .sheet h2{font-size:19px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px}
-  .sheet .sub{font-size:13px;color:#888;margin-bottom:14px}
-  .dot{width:12px;height:12px;border-radius:50%;display:inline-block}
-  .kv{display:grid;grid-template-columns:76px 1fr;gap:8px 10px;font-size:14px;margin-bottom:16px}
-  .kv dt{color:#888} .kv dd{word-break:break-all}
-  .kv a{color:var(--blue);text-decoration:none}
-  .warn{background:#fff3f2;color:#c62e22;font-size:13px;padding:8px 10px;border-radius:8px;margin-bottom:14px}
-  label{display:block;font-size:12px;color:#888;margin:10px 0 4px}
-  input,select,textarea{width:100%;font:inherit;font-size:15px;padding:10px;border:1px solid #ddd;border-radius:10px;background:#fff}
-  textarea{min-height:64px;resize:vertical}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .btns{display:flex;gap:8px;margin-top:16px}
-  .btn{flex:1;padding:13px;border-radius:12px;font-weight:700;font-size:15px;background:#f1f1f1}
+  .sheet h3{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .kv{display:grid;grid-template-columns:76px 1fr;gap:9px 10px;font-size:15px}
+  .kv dt{color:#888}
+  .btn{width:100%;margin-top:18px;padding:13px;border-radius:12px;font-weight:700;font-size:15px;background:#f1f1f1}
   .btn.primary{background:var(--blue);color:#fff}
+
   .connect{max-width:420px;margin:40px auto;padding:0 20px}
   .connect h2{font-size:22px;font-weight:800;margin-bottom:6px}
   .connect p{font-size:14px;color:#777;line-height:1.5;margin-bottom:8px}
+  .connect label{display:block;font-size:12px;color:#888;margin:12px 0 4px}
+  .connect input{width:100%;font:inherit;font-size:15px;padding:10px;border:1px solid #ddd;border-radius:10px}
+  .connect .row{display:flex;gap:8px} .connect .row .btn{flex:1}
   .err{color:#c62e22;font-size:13px;margin-top:10px;min-height:18px}
-  .stamp{font-size:11px;color:#bbb;text-align:center;padding:14px 0 90px}
 </style>
 </head>
 <body>
-<header>
-  <div class="top">
-    <h1>홈스테드</h1>
-    <button class="ibtn" id="btnCancel" title="취소 표시">⊘</button>
+<div id="app">
+  <header>
+    <h1>홈스테드<small>입실현황</small></h1>
     <button class="ibtn" id="btnSync" title="지금 동기화">⟳</button>
     <button class="ibtn" id="btnCfg" title="연결 설정">⚙</button>
-  </div>
-  <div class="nav">
-    <button class="ibtn" id="prev">‹</button>
-    <div class="ym" id="ym"></div>
-    <button class="ibtn" id="next">›</button>
-    <button class="chip" id="today" style="margin-left:auto">오늘</button>
-  </div>
-  <div class="legend" id="legend"></div>
-  <div class="dow"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
-</header>
-
-<main id="cal"></main>
-<div class="stamp" id="stamp"></div>
-<button class="fab" id="fab" title="직접 예약 추가">＋</button>
-
+  </header>
+  <section class="today" id="today"></section>
+  <div class="tl-wrap" id="wrap"><div class="tl" id="tl"></div></div>
+  <div class="legend"><span>🧹 퇴실(청소)</span><span>바 = 실제 입실 (벤디트 인증)</span></div>
+  <p style="font-size:11px;color:#aaa;padding:0 14px">내일 청소 예정은 지금까지 입실한 손님 기준이라, 오늘 밤 입실이 끝나면 확정돼.</p>
+  <div class="stamp" id="stamp"></div>
+</div>
 <div class="sheet-bg" id="bg"></div>
 <div class="sheet" id="sheet"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const COLORS = ['#3B9AE8','#F0648F','#F5BE1E','#22C49A','#C65BE6','#9ED645','#FF8A2B','#8A9096'];
+const COLORS = ['#3B9AE8','#F0648F','#E9AE00','#1FB58C','#B44FDB','#7FBF2A','#FF8A2B','#7B828A'];
 const DEMO = new URLSearchParams(location.search).has('demo');
+const PAST = 7, DAYS = 14, LEFT = 60;
 
-// ── 연결 정보: 기기에만 저장 (저장소엔 없음) ──
 const store = {
   get(k){ try { return localStorage.getItem('hs_'+k) || ''; } catch(_) { return ''; } },
   set(k,v){ try { localStorage.setItem('hs_'+k, v); } catch(_){} },
-  del(k){ try { localStorage.removeItem('hs_'+k); } catch(_){} },
 };
-// 공유 링크: .../#api=<웹앱URL>&key=<접근키> → 저장 후 주소창에서 지움
 function importHash(){
   if (!/api=|key=/.test(location.hash)) return false;
   const h = new URLSearchParams(location.hash.slice(1));
@@ -134,265 +114,160 @@ function importHash(){
   return true;
 }
 importHash();
-window.addEventListener('hashchange', () => { if (importHash()) { document.querySelector('header').style.display=''; $('fab').style.display=''; load(); } });
-let ROOMS = [], PREFIX = {}, LIST = [];
-let showCancel = false, showPast = false;
-let view = new Date(); view.setDate(1);
+window.addEventListener('hashchange', () => { if (importHash()) { document.getElementById('connect')?.remove(); $('app').style.display=''; load(); } });
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,'0');
 const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
 const addD = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
-const todayStr = ymd(new Date());
-const roomColor = r => { const i = ROOMS.indexOf(r); return i < 0 ? '#555' : COLORS[i % COLORS.length]; };
+const diff = (a,b) => Math.round((parse(b) - parse(a)) / 864e5);
+const md = s => `${+s.slice(5,7)}/${+s.slice(8,10)}`;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const won = n => n === '' || n == null ? '' : Number(n).toLocaleString('ko-KR') + '원';
+const W = ['일','월','화','수','목','금','토'];
+const css = v => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(v));
+function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1800); }
 
-function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1800); }
+let ROOMS = [], LIST = [], TODAY = ymd(new Date());
 
 async function call(action, extra){
-  if (DEMO) return MOCK[action] ? MOCK[action](extra) : true;
+  if (DEMO) return MOCK[action] ? MOCK[action]() : true;
   const api = store.get('api'), key = store.get('key');
   if (!api || !key) throw new Error('nocfg');
-  const res = await fetch(api, { method:'POST', redirect:'follow',
-    body: JSON.stringify(Object.assign({ key, action }, extra || {})) });   // text/plain → preflight 없음
+  const res = await fetch(api, { method:'POST', redirect:'follow', body: JSON.stringify(Object.assign({ key, action }, extra || {})) });
   const j = await res.json();
   if (!j.ok) throw new Error(j.error || 'fail');
   return j.data;
 }
 
-// ── 범위: 그 달의 첫 주 일요일 ~ 마지막 주 토요일 ──
-function range(){
-  const first = new Date(view.getFullYear(), view.getMonth(), 1);
-  const last  = new Date(view.getFullYear(), view.getMonth()+1, 0);
-  return [addD(first, -first.getDay()), addD(last, 6-last.getDay())];
-}
-
 async function load(){
-  $('ym').textContent = `${view.getFullYear()}.${pad(view.getMonth()+1)}`;
-  const [s,e] = range();
+  const start = ymd(addD(parse(TODAY), -PAST)), end = ymd(addD(parse(TODAY), DAYS - PAST));
   try {
-    const d = await call('data', { from: ymd(s), to: ymd(addD(e,1)) });
-    ROOMS = d.rooms; PREFIX = d.prefix; LIST = d.list;
+    const d = await call('data', { from: start, to: end });
+    ROOMS = d.rooms; LIST = d.list; TODAY = d.today || TODAY;
     $('stamp').textContent = `마지막 불러옴 ${d.now}`;
-  } catch(err){ if (err.message==='key' || err.message==='nocfg') return showConnect(err.message==='key' ? '접근키가 맞지 않음' : ''); toast('불러오기 실패'); console.error(err); }
-  legend(); render();
+    render();
+  } catch(err){
+    if (err.message === 'key' || err.message === 'nocfg') return showConnect(err.message === 'key' ? '접근키가 맞지 않음' : '');
+    toast('불러오기 실패'); console.error(err);
+  }
 }
 
-function legend(){
-  $('legend').innerHTML = ROOMS.map((r,i)=>`<span style="background:${COLORS[i]}">${r}</span>`).join('')
-    + `<span style="background:#fff;color:#333;border:1.5px solid #333">미배정</span>`;
+/** 오늘 아침 기준: 어젯밤 이전 입실 → 오늘 퇴실 = 청소 / 퇴실 내일 이후 = 연박 / 오늘 입실 = 입실 완료 */
+function todayState(){
+  const clean = [], stay = [], inNow = [], next = [];
+  const tmr = ymd(addD(parse(TODAY), 1));
+  ROOMS.forEach(room => {
+    const rs = LIST.filter(v => v.room === room);
+    const s = rs.filter(v => v.ci < TODAY && v.co >= TODAY).sort((a,b)=>a.inAt<b.inAt?1:-1)[0];
+    if (s && s.co === TODAY) clean.push(room);
+    else if (s) stay.push(room);
+    if (rs.some(v => v.ci === TODAY)) inNow.push(room);
+    // 오늘 밤 투숙(연박 + 오늘 입실) 중 내일 퇴실
+    if (rs.some(v => v.ci <= TODAY && v.co === tmr)) next.push(room);
+  });
+  return { clean, stay, inNow, next };
 }
 
 function render(){
-  const [s,e] = range();
-  const cal = $('cal'); cal.innerHTML = '';
-  const thisWeekStart = addD(new Date(), -new Date().getDay()); thisWeekStart.setHours(0,0,0,0);
-  let pastHidden = 0;
+  const t = todayState(), td = parse(TODAY);
+  const chips = (a, empty) => a.length ? `<div class="rs">${a.map(r=>`<span>${r}</span>`).join('')}</div>` : `<div class="none">${empty}</div>`;
+  const busy = new Set([...t.stay, ...t.inNow]);
+  $('today').innerHTML = `<h2>오늘 ${md(TODAY)}(${W[td.getDay()]})</h2>
+    <div class="cards">
+      <div class="card clean"><div class="k">🧹 청소 (오늘 퇴실)</div><div class="v">${t.clean.length}</div>${chips(t.clean,'없음')}</div>
+      <div class="card stay"><div class="k">⛔ 연박 (출입금지)</div><div class="v">${t.stay.length}</div>${chips(t.stay,'없음')}</div>
+      <div class="card next"><div class="k">🗓 내일 청소 예정</div><div class="v">${t.next.length}</div>${chips(t.next,'아직 없음')}</div>
+      <div class="card"><div class="k">오늘 밤 빈방</div><div class="v">${ROOMS.length - busy.size}</div>${chips(ROOMS.filter(r => !busy.has(r)), '만실')}</div>
+    </div>`;
 
-  for (let ws = new Date(s); ws <= e; ws = addD(ws,7)){
-    const we = addD(ws,6);
-    const isPast = we < thisWeekStart;
-    if (isPast && !showPast){ pastHidden++; continue; }
-    cal.appendChild(week(ws, isPast));
-  }
-  if (pastHidden){
-    const b = document.createElement('button');
-    b.className='collapse'; b.textContent = `︾ 지난 ${pastHidden}주 펼치기`;
-    b.onclick = ()=>{ showPast = true; render(); };
-    cal.prepend(b);
-  } else if (showPast){
-    const b = document.createElement('button');
-    b.className='collapse'; b.textContent = '︽ 접기';
-    b.onclick = ()=>{ showPast = false; render(); };
-    cal.prepend(b);
-  }
+  const start = addD(td, -PAST);
+  const days = Array.from({length: DAYS}, (_,i) => addD(start, i)), ds = days.map(ymd);
+  let h = '<div class="corner"></div>';
+  days.forEach((d,i) => {
+    const cls = ['hd', d.getDay()===0?'sun':'', d.getDay()===6?'sat':'', ds[i]===TODAY?'t':''].join(' ');
+    h += `<div class="${cls}">${W[d.getDay()]}<b>${d.getDate()}</b></div>`;
+  });
+  ROOMS.forEach((room, ri) => {
+    h += `<div class="rm"><span class="dot" style="background:${COLORS[ri%COLORS.length]}"></span>${room}</div>`;
+    ds.forEach(s => h += `<div class="cell ${s<TODAY?'past':''} ${s===TODAY?'t':''}"></div>`);
+  });
+  $('tl').innerHTML = h;
+
+  const colW = css('--col'), rowH = css('--rowh'), headH = css('--head');
+  // 입실 = 그 날 칸의 가운데(오후)부터, 퇴실 = 퇴실일 칸의 앞쪽(오전)까지 → 당일 퇴실·입실이 안 겹침
+  const IN = 0.5, OUT = 0.42;
+  LIST.forEach(v => {
+    const ri = ROOMS.indexOf(v.room); if (ri < 0) return;
+    const s = diff(ds[0], v.ci), e = diff(ds[0], v.co);
+    const x1 = Math.max(s + IN, 0), x2 = Math.min(e + OUT, DAYS);
+    const rowTop = headH + ri*rowH;
+    if (x2 > x1) {
+      const el = document.createElement('div');
+      const w = (x2 - x1) * colW - 2, n = diff(v.ci, v.co);
+      el.className = 'bar' + (s + IN < 0 ? ' contL' : '') + (w < 70 ? ' narrow' : '');
+      el.style.cssText = `left:${LEFT + x1*colW + 1}px;width:${w}px;top:${rowTop + rowH - 28 - 6}px;background:${COLORS[ri%COLORS.length]}`;
+      el.innerHTML = w < 70 ? `${n}박` : `${esc((v.inAt||'').slice(11))}<span class="sub">${n}박</span>`;
+      el.onclick = () => openDetail(v);
+      $('tl').appendChild(el);
+    }
+    if (e >= 0 && e < DAYS) {
+      const m = document.createElement('div');
+      m.className = 'out'; m.textContent = '🧹';
+      m.style.cssText = `left:${LEFT + e*colW + 3}px;top:${rowTop + 3}px`;
+      $('tl').appendChild(m);
+    }
+  });
+  requestAnimationFrame(() => { $('wrap').scrollLeft = Math.max(0, (PAST - 2) * colW); });
 }
 
-function week(ws, isPast){
-  const el = document.createElement('section');
-  el.className = 'week' + (isPast ? ' past' : '');
-  const wsS = ymd(ws), weS = ymd(addD(ws,6));
-
-  // 날짜 줄
-  let nums = '<div class="nums">';
-  for (let i=0;i<7;i++){
-    const d = addD(ws,i), ds = ymd(d);
-    const cls = [i===0?'sun':'', i===6?'sat':'', d.getMonth()!==view.getMonth()?'dim':'', ds===todayStr?'today':''].join(' ');
-    nums += `<div class="${cls}"><span>${d.getDate()}</span></div>`;
-  }
-  nums += '</div>';
-
-  // 이번 주에 걸친 예약 → 객실별 레인
-  const items = LIST.filter(r => (showCancel || r.st !== '취소'))
-    .map(r => {
-      const last = r.co > r.ci ? ymd(addD(parse(r.co), -1)) : r.ci;   // 마지막 숙박일
-      return Object.assign({}, r, { last });
-    })
-    .filter(r => r.ci <= weS && r.last >= wsS);
-
-  const lanes = [];
-  ROOMS.forEach(room => {
-    const rs = items.filter(r => r.room === room).sort((a,b)=>a.ci<b.ci?-1:1);
-    if (rs.length) lanes.push(...packLanes(rs, room));
-  });
-  const un = items.filter(r => !ROOMS.includes(r.room)).sort((a,b)=>a.ci<b.ci?-1:1);
-  if (un.length) lanes.push(...packLanes(un, null));
-
-  let lanesHtml = '<div class="lanes">';
-  if (!lanes.length) lanesHtml += '<div class="empty">&nbsp;</div>';
-  lanes.forEach(L => {
-    lanesHtml += '<div class="lane">';
-    L.items.forEach(r => {
-      const s = r.ci < wsS ? 0 : dayIdx(ws, r.ci);
-      const e = r.last > weS ? 6 : dayIdx(ws, r.last);
-      const cls = ['bar', r.ci < wsS ? 'contL':'', r.last > weS ? 'contR':'',
-                   r.st==='취소'?'cancel':'', r.flag?'flag':'', r._clash?'clash':'',
-                   L.room ? '' : 'unassigned', e - s === 0 ? 'short' : ''].join(' ');
-      const pre = PREFIX[r.p] || r.p;
-      const nm = r.name || (r.p==='부킹' ? r.id : '이름없음');
-      const short = e - s === 0;
-      const label = short ? `<span class="pf">${esc(pre)}</span>${esc(nm)}`
-                          : `(${esc(pre)})${esc(nm)}${L.room ? '' : ' · ' + esc(r.rawRoom || '객실?')}`;
-      lanesHtml += `<div class="${cls}" data-k="${esc(r.p)}|${esc(r.id)}"
-        style="left:calc(${s}*100%/7 + 2px);width:calc(${e-s+1}*100%/7 - 4px);background:${L.room?roomColor(L.room):'#fff'}">
-        <span class="t">${r.flag && e-s>0?'⚠ ':''}${label}</span></div>`;
-    });
-    lanesHtml += '</div>';
-  });
-  lanesHtml += '</div>';
-
-  el.innerHTML = '<div class="days">' + '<div></div>'.repeat(7) + '</div>' + nums + lanesHtml;
-  el.querySelectorAll('.bar').forEach(b => b.onclick = () => openDetail(b.dataset.k));
-  return el;
-}
-
-const dayIdx = (ws, s) => Math.round((parse(s) - ws) / 864e5);
-
-/** 같은 객실 안에서 겹치면 다음 줄로 (겹침 = 오버부킹 → 빨간 테두리) */
-function packLanes(rs, room){
-  const out = [];
-  rs.forEach(r => {
-    let L = out.find(l => l.items.every(x => x.last < r.ci || x.ci > r.last));
-    if (!L){ L = { room, items: [] }; out.push(L); }
-    L.items.push(r);
-  });
-  if (room && out.length > 1){
-    out.forEach(l => l.items.forEach(r => {
-      const live = r.st !== '취소';
-      r._clash = live && rs.some(o => o !== r && o.st !== '취소' && o.ci <= r.last && o.last >= r.ci);
-    }));
-  }
-  return out;
-}
-
-// ── 상세 시트 ──
-function openDetail(k){
-  const [p, id] = k.split('|');
-  const r = LIST.find(x => x.p === p && String(x.id) === id);
-  if (!r) return;
-  const tel = r.tel ? `<a href="tel:${esc(r.tel)}">${esc(r.tel)}</a>` : '-';
-  const roomOpts = ['<option value="">(자동: ' + esc(r.room && !r.manualRoom ? r.room : '미배정') + ')</option>']
-    .concat(ROOMS.map(x => `<option ${x===r.manualRoom?'selected':''}>${x}</option>`)).join('');
-  $('sheet').innerHTML = `
-    <h2><span class="dot" style="background:${roomColor(r.room)}"></span>${esc(r.name || '이름 없음')}</h2>
-    <div class="sub">${esc(r.p)} · ${esc(r.id)} · ${esc(r.st)}</div>
-    ${r.flag ? `<div class="warn">⚠ ${esc(r.flag)}${hint(r.flag)}</div>` : ''}
+function openDetail(v){
+  const ri = ROOMS.indexOf(v.room);
+  $('sheet').innerHTML = `<h3><span style="width:12px;height:12px;border-radius:50%;background:${COLORS[ri%COLORS.length]}"></span>${esc(v.room)}</h3>
     <dl class="kv">
-      <dt>객실</dt><dd>${esc(r.room || '미배정')} <span style="color:#aaa">${esc(r.rawRoom||'')}</span></dd>
-      <dt>일정</dt><dd>${esc(r.ci)} → ${esc(r.co)} ${r.n?`(${esc(r.n)}박)`:''}</dd>
-      <dt>인원</dt><dd>${esc(r.pax || '-')}</dd>
-      <dt>금액</dt><dd>${won(r.amt) || '-'}</dd>
-      <dt>전화</dt><dd>${tel}</dd>
-      <dt>요청</dt><dd>${esc(r.req || '-')}</dd>
+      <dt>입실</dt><dd>${esc(v.inAt)}</dd>
+      <dt>퇴실예정</dt><dd>${esc(v.outAt)} (${diff(v.ci, v.co)}박)</dd>
+      <dt>구분</dt><dd>${esc(v.kind || '-')}</dd>
+      <dt>벤디트</dt><dd>${esc(v.id || '-')}</dd>
     </dl>
-    <label>객실 직접 지정</label><select id="mRoom">${roomOpts}</select>
-    <label>이름 직접 입력</label><input id="mName" value="${esc(r.manualName||'')}" placeholder="${esc(r.name||'')}">
-    <label>메모</label><textarea id="mMemo">${esc(r.memo||'')}</textarea>
-    <div class="btns"><button class="btn" id="cls">닫기</button><button class="btn primary" id="sv">저장</button></div>`;
+    <button class="btn" id="cls">닫기</button>`;
   $('cls').onclick = closeSheet;
-  $('sv').onclick = async () => {
-    const f = { '수동객실': $('mRoom').value, '수동이름': $('mName').value.trim(), '메모': $('mMemo').value };
-    try { await call('save', { p, id, fields: f }); toast('저장됨'); closeSheet(); load(); }
-    catch(e){ toast('저장 실패'); }
-  };
-  openSheet();
+  $('bg').classList.add('on'); $('sheet').classList.add('on');
 }
-function hint(f){
-  if (/iCal대기/.test(f)) return ' — 부킹 달력 반영 대기. 30분 내 자동 배정';
-  if (/확인필요/.test(f)) return ' — 같은 날 후보 객실 여러 개. 객실 직접 지정';
-  if (/변경/.test(f)) return ' — 플랫폼에서 일정 확인';
-  if (/사라짐/.test(f)) return ' — 에어비앤비에서 취소됐는지 확인';
-  if (/메일대기/.test(f)) return ' — 확정 메일 들어오면 이름 채워짐';
-  return '';
-}
-
-function openAdd(){
-  const t = todayStr, t1 = ymd(addD(new Date(),1));
-  $('sheet').innerHTML = `
-    <h2>직접 예약 추가</h2><div class="sub">전화·현장·계좌이체 예약</div>
-    <label>이름</label><input id="aName">
-    <label>전화</label><input id="aTel" inputmode="tel">
-    <div class="row2"><div><label>체크인</label><input type="date" id="aCi" value="${t}"></div>
-                     <div><label>체크아웃</label><input type="date" id="aCo" value="${t1}"></div></div>
-    <div class="row2"><div><label>객실</label><select id="aRoom">${ROOMS.map(r=>`<option>${r}</option>`).join('')}</select></div>
-                     <div><label>금액</label><input id="aAmt" inputmode="numeric"></div></div>
-    <label>메모</label><textarea id="aMemo"></textarea>
-    <div class="btns"><button class="btn" id="cls">닫기</button><button class="btn primary" id="sv">추가</button></div>`;
-  $('cls').onclick = closeSheet;
-  $('sv').onclick = async () => {
-    const f = { name:$('aName').value.trim(), tel:$('aTel').value.trim(), ci:$('aCi').value, co:$('aCo').value,
-                room:$('aRoom').value, amt:$('aAmt').value.replace(/\D/g,''), memo:$('aMemo').value };
-    if (!f.name || !f.ci || !f.co || f.co <= f.ci) return toast('이름·날짜 확인');
-    try { await call('add', { f }); toast('추가됨'); closeSheet(); load(); } catch(e){ toast('추가 실패'); }
-  };
-  openSheet();
-}
-function openSheet(){ $('bg').classList.add('on'); $('sheet').classList.add('on'); }
 function closeSheet(){ $('bg').classList.remove('on'); $('sheet').classList.remove('on'); }
+$('bg').onclick = closeSheet;
 
-// ── 최초 연결 화면 ──
 function showConnect(msg){
-  document.querySelector('header').style.display='none'; $('fab').style.display='none'; $('stamp').textContent='';
-  $('cal').innerHTML = `<div class="connect">
-    <h2>홈스테드 예약 연결</h2>
+  $('app').style.display = 'none';
+  document.getElementById('connect')?.remove();
+  const box = document.createElement('div');
+  box.className = 'connect'; box.id = 'connect';
+  box.innerHTML = `<h2>홈스테드 입실현황 연결</h2>
     <p>공유받은 링크로 열었다면 자동 연결돼. 직접 입력하려면 아래 두 칸.</p>
     <label>API 주소 (Apps Script 웹앱 /exec)</label><input id="cApi" value="${esc(store.get('api'))}" placeholder="https://script.google.com/macros/s/.../exec">
     <label>접근키</label><input id="cKey" type="password" value="${esc(store.get('key'))}">
-    <div class="btns"><button class="btn" onclick="location.search='?demo'">데모 보기</button><button class="btn primary" id="cGo">연결</button></div>
-    <div class="err">${esc(msg||'')}</div></div>`;
+    <div class="row"><button class="btn" onclick="location.search='?demo'">데모 보기</button><button class="btn primary" id="cGo">연결</button></div>
+    <div class="err">${esc(msg||'')}</div>`;
+  document.body.appendChild(box);
   $('cGo').onclick = () => { store.set('api', $('cApi').value.trim()); store.set('key', $('cKey').value.trim());
-    document.querySelector('header').style.display=''; $('fab').style.display=''; load(); };
+    box.remove(); $('app').style.display = ''; load(); };
 }
 
-// ── 이벤트 ──
-$('btnCfg').onclick = ()=>{ if (confirm('연결 정보를 다시 입력할까?')) showConnect(''); };
-$('prev').onclick = ()=>{ view.setMonth(view.getMonth()-1); showPast = true; load(); };
-$('next').onclick = ()=>{ view.setMonth(view.getMonth()+1); showPast = true; load(); };
-$('today').onclick = ()=>{ view = new Date(); view.setDate(1); showPast = false; load(); };
-$('btnCancel').onclick = ()=>{ showCancel = !showCancel; $('btnCancel').style.color = showCancel ? '#1565ff' : '#333';
-                              toast(showCancel ? '취소 예약 표시' : '취소 예약 숨김'); render(); };
-$('btnSync').onclick = async ()=>{ toast('동기화 중…'); try { await call('sync'); await load(); toast('완료'); } catch(e){ toast('동기화 실패'); } };
-$('fab').onclick = openAdd;
-$('bg').onclick = closeSheet;
-let tx=0; document.addEventListener('touchstart', e=>tx=e.touches[0].clientX, {passive:true});
-document.addEventListener('touchend', e=>{ if ($('sheet').classList.contains('on')) return;
-  const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 80){ $(dx<0?'next':'prev').click(); } }, {passive:true});
+$('btnCfg').onclick = () => { if (confirm('연결 정보를 다시 입력할까?')) showConnect(''); };
+$('btnSync').onclick = async () => { toast('동기화 중…'); try { await call('sync'); await load(); toast('완료'); } catch(e){ toast('동기화 실패'); } };
+document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('connect')) load(); });
 
 // ── 데모 (?demo) — 가상의 데이터 ──
 const MOCK = {
   data: () => {
-    const t = new Date(); const D = n => ymd(addD(t, n));
-    const R = (p,id,name,a,b,room,x) => Object.assign({p,id,st:'확정',name,ci:D(a),co:D(b),n:b-a,room}, x||{});
-    return { rooms:['101호','102호','103호','104호','201호','202호','203호','204호'],
-      prefix:{'네이버':'네','에어비앤비':'에','부킹':'부','아고다':'아','트립':'트','야놀자':'야','직접':'직'}, now:'데모',
-      list:[ R('에어비앤비','HM0001','손님A',-3,1,'203호'), R('야놀자','Y1','손님B',2,3,'103호',{amt:90000}),
-        R('트립','T1','GUEST/C',0,2,'203호'), R('네이버','N1','김*수',-1,1,'201호'),
-        R('아고다','A1','Guest D',4,6,'202호'), R('부킹','5100000000','',1,2,'',{flag:'iCal대기'}),
-        R('네이버','N2','이*영',3,5,'',{rawRoom:'장기 숙박 문의'}), R('에어비앤비','HM0002','손님E',-2,3,'201호',{flag:'변경됨-확인'}),
-        R('직접','D1','현장손님',0,4,'101호'), R('에어비앤비','HM0003','손님F',2,4,'104호'), R('아고다','A2','Guest G',3,5,'104호'),
-        R('야놀자','Y2','손님H',5,6,'103호',{st:'취소'}) ] };
+    const t = new Date(), D = n => ymd(addD(t, n));
+    let i = 0;
+    const V = (room, a, b, hm) => ({ id: String(9000 + (++i)), room, ci: D(a), co: D(b),
+      inAt: `${D(a)} ${hm}`, outAt: `${D(b)} 11:00`, kind: '예약입실', car: '차량없음' });
+    return { rooms:['101호','102호','103호','104호','201호','202호','203호','204호'], today: D(0), now: '데모',
+      list: [ V('101호',-1,0,'20:10'), V('101호',-4,-2,'16:30'), V('102호',-2,1,'15:40'), V('103호',-1,0,'22:05'),
+        V('103호',-5,-4,'15:00'), V('104호',0,2,'15:20'), V('201호',-1,0,'19:20'), V('201호',-6,-4,'18:00'),
+        V('202호',-3,2,'17:45'), V('203호',-5,-3,'21:10'), V('204호',0,1,'16:00'), V('204호',-2,0,'23:40') ] };
   }
 };
 
