@@ -2,94 +2,128 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#ffffff">
-<title>홈스테드 입실현황</title>
+<meta name="theme-color" content="#f4f5f7">
+<title>홈스테드 청소 일정</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%231565ff%22/%3E%3Cpath d=%22M14 30 32 15l18 15v19H38V37H26v12H14z%22 fill=%22white%22/%3E%3C/svg%3E">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
 <style>
-  :root{ --bg:#fff; --line:#ececec; --muted:#9a9a9a; --text:#1d1d1f; --blue:#1565ff; --sun:#e0402f;
-         --today:#eef4ff; --past:#fafafa; --col:56px; --rowh:50px; --head:58px; }
+  :root{ --bg:#f4f5f7; --card:#fff; --line:#e9eaee; --muted:#8b8f98; --text:#1b1d22; --blue:#1565ff;
+         --clean:#1565ff; --stay:#e8590c; --done:#0f9d58; --wait:#9aa0a8; --sun:#e0402f;
+         --col:52px; --rowh:48px; --head:54px; --left:64px; }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--text);font-family:Pretendard,-apple-system,'Apple SD Gothic Neo',sans-serif;-webkit-text-size-adjust:100%}
+  body{padding-bottom:env(safe-area-inset-bottom)}
   button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
+  #app{max-width:720px;margin:0 auto}
 
-  header{display:flex;align-items:center;gap:4px;padding:14px 12px 10px}
+  header{display:flex;align-items:center;gap:4px;padding:14px 16px 6px}
   header h1{font-size:20px;font-weight:800;letter-spacing:-.5px;margin-right:auto}
-  header small{font-size:12px;color:var(--muted);font-weight:500;margin-left:6px}
-  .ibtn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:18px;color:#333}
-  .ibtn:active{background:#f1f1f1}
+  .ibtn{height:36px;min-width:36px;border-radius:10px;display:grid;place-items:center;font-size:17px;color:#444;padding:0 8px}
+  .ibtn.txt{font-size:13px;color:var(--muted)}
+  .ibtn:active{background:#e6e8ec}
 
-  .today{margin:0 12px 12px;border-radius:16px;background:#f6f7f9;padding:14px}
-  .today h2{font-size:14px;font-weight:700;color:#555;margin-bottom:10px}
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .card{background:#fff;border-radius:12px;padding:10px 12px}
-  .card .k{font-size:12px;color:#888;font-weight:600}
-  .card .v{font-size:22px;font-weight:800;margin:2px 0 6px}
-  .card .rs{display:flex;flex-wrap:wrap;gap:4px}
-  .card .rs span{font-size:12px;font-weight:700;padding:3px 7px;border-radius:7px;background:#f1f1f1}
-  .card.clean .v{color:var(--blue)} .card.clean .rs span{background:#e8f0ff;color:var(--blue)}
-  .card.stay  .v{color:#d9480f}     .card.stay .rs span{background:#fff0e6;color:#d9480f}
-  .card.next  .v{color:#5b6bd6}     .card.next .rs span{background:#eef0ff;color:#5b6bd6}
-  .card .none{font-size:12px;color:#bbb}
+  .date{padding:0 16px 10px;display:flex;align-items:baseline;gap:8px}
+  .date b{font-size:17px;font-weight:800}
+  .date span{font-size:12px;color:var(--muted)}
 
-  .tl-wrap{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px 14px}
+  .sum > div{background:var(--card);border-radius:14px;padding:10px 12px;min-width:0}
+  .sum .k{font-size:12px;color:var(--muted);font-weight:600;line-height:1.3}
+  .sum .v{font-size:22px;font-weight:800;margin-top:2px}
+  .sum .v small{font-size:13px;font-weight:600;color:var(--muted);margin-left:2px}
+  .sum .c .v{color:var(--clean)}
+
+  .floor{margin:0 16px 14px}
+  .fh{display:flex;align-items:center;gap:8px;padding:2px 2px 8px;flex-wrap:wrap}
+  .fh h2{font-size:16px;font-weight:800}
+  .fh .tags{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+  .tag{font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;background:#e9ebef;color:#555;white-space:nowrap}
+  .tag.clean{background:#e7efff;color:var(--clean)} .tag.stay{background:#fff0e5;color:var(--stay)}
+  .tag.done{background:#e3f5ea;color:var(--done)} .tag.wait{background:#eceef1;color:#6b7078}
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .tile{background:var(--card);border-radius:14px;padding:12px 12px 11px;text-align:left;position:relative;overflow:hidden;min-height:98px}
+  .tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--rc)}
+  .tile .rn{display:flex;align-items:center;gap:6px;font-size:18px;font-weight:800;padding-left:4px}
+  .tile .rn .car{font-size:14px}
+  .tile .st{margin-top:6px;padding-left:4px;font-size:14px;font-weight:800}
+  .tile .sb{margin-top:3px;padding-left:4px;font-size:12px;color:var(--muted);line-height:1.4}
+  .tile .badge{position:absolute;right:10px;top:12px;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:#eef0ff;color:#4b5bd4}
+  .tile.clean .st{color:var(--clean)} .tile.stay .st{color:var(--stay)} .tile.done .st{color:var(--done)} .tile.wait .st{color:var(--wait)}
+  .tile:active{transform:scale(.98)}
+
+  .tlh{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 8px}
+  .tlh h2{font-size:16px;font-weight:800}
+  .tlh span{font-size:12px;color:var(--muted)}
+  .tl-wrap{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .tl-wrap::-webkit-scrollbar{display:none}
-  .tl{display:grid;grid-template-columns:60px repeat(14, var(--col));position:relative;width:max-content}
+  .tl{display:grid;grid-template-columns:var(--left) repeat(14, var(--col));position:relative;width:max-content}
   .cell{height:var(--rowh);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .cell.past{background:var(--past)} .cell.t{background:var(--today)}
+  .cell.past{background:#fafafb} .cell.t{background:#eef4ff}
   .hd{height:var(--head);display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:11px;color:var(--muted);background:#fff}
-  .hd b{font-size:16px;color:var(--text);font-weight:600;line-height:1.3}
+  .hd b{font-size:15px;color:var(--text);font-weight:600;line-height:1.35}
   .hd.sun,.hd.sun b{color:var(--sun)} .hd.sat,.hd.sat b{color:var(--blue)}
   .hd.t b{background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center}
-  .rm{position:sticky;left:0;z-index:3;background:#fff;height:var(--rowh);display:flex;align-items:center;justify-content:center;
-      font-weight:700;font-size:14px;border-right:1px solid #ddd;border-bottom:1px solid var(--line)}
-  .rm .dot{width:8px;height:8px;border-radius:50%;margin-right:5px}
-  .corner{position:sticky;left:0;z-index:4;background:#fff;height:var(--head);border-right:1px solid #ddd;border-bottom:1px solid var(--line)}
-
+  .rm{position:sticky;left:0;z-index:3;background:#fff;height:var(--rowh);display:flex;align-items:center;gap:5px;padding-left:8px;
+      font-weight:800;font-size:13px;white-space:nowrap;border-right:1px solid #dcdee3;border-bottom:1px solid var(--line)}
+  .rm i{width:9px;height:9px;border-radius:3px;flex:none}
+  .corner{position:sticky;left:0;z-index:4;background:#fff;height:var(--head);border-right:1px solid #dcdee3;border-bottom:1px solid var(--line)}
+  .fl{grid-column:1 / -1;height:26px;background:#f1f2f5;border-bottom:1px solid var(--line)}
+  .fl span{position:sticky;left:8px;font-size:12px;font-weight:800;color:#555;line-height:26px;padding-left:8px}
   .bar{position:absolute;height:28px;border-radius:8px;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;
-       padding:0 7px;white-space:nowrap;overflow:hidden;z-index:2;cursor:pointer;line-height:1}
+       padding:0 6px;white-space:nowrap;overflow:hidden;z-index:2;cursor:pointer;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.08)}
   .bar.contL{border-top-left-radius:0;border-bottom-left-radius:0}
-  .bar .sub{font-weight:500;opacity:.85;margin-left:4px}
+  .bar .sub{font-weight:500;opacity:.9;margin-left:4px}
   .out{position:absolute;font-size:11px;line-height:1;z-index:2;pointer-events:none}
-  .bar.narrow{padding:0 5px;font-size:11px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;color:var(--muted);padding:10px 18px 4px}
+  .note{font-size:11px;color:#a3a7ae;padding:2px 18px 4px;line-height:1.5}
+  .stamp{font-size:11px;color:#b5b9c0;text-align:center;padding:10px 0 40px}
 
-  .legend{display:flex;gap:12px;font-size:12px;color:#777;padding:10px 14px}
-  .stamp{font-size:11px;color:#bbb;text-align:center;padding:8px 0 40px}
   .toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%);background:#222;color:#fff;font-size:13px;
-         padding:8px 14px;border-radius:999px;opacity:0;transition:.2s;z-index:60;pointer-events:none}
+         padding:8px 14px;border-radius:999px;opacity:0;transition:.2s;z-index:60;pointer-events:none;white-space:nowrap}
   .toast.on{opacity:1}
 
-  .sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:40;display:none}
-  .sheet{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;z-index:50;padding:20px 18px 28px;transform:translateY(100%);transition:.22s}
+  .sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:40;display:none}
+  .sheet{position:fixed;left:0;right:0;bottom:0;max-width:720px;margin:0 auto;background:#fff;border-radius:20px 20px 0 0;z-index:50;
+         padding:10px 18px calc(22px + env(safe-area-inset-bottom));transform:translateY(105%);transition:.22s;max-height:85vh;overflow:auto}
   .sheet.on{transform:none} .sheet-bg.on{display:block}
-  .sheet h3{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-  .kv{display:grid;grid-template-columns:76px 1fr;gap:9px 10px;font-size:15px}
-  .kv dt{color:#888}
-  .btn{width:100%;margin-top:18px;padding:13px;border-radius:12px;font-weight:700;font-size:15px;background:#f1f1f1}
+  .grab{width:40px;height:4px;border-radius:2px;background:#d9dbe0;margin:0 auto 12px}
+  .sh{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .sh .sq{width:14px;height:14px;border-radius:4px}
+  .sh h3{font-size:22px;font-weight:800}
+  .sh .tag{margin-left:auto}
+  .sc{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+  .sc .tt{font-size:13px;font-weight:800;margin-bottom:8px}
+  .kv{display:grid;grid-template-columns:84px 1fr;gap:8px 10px;font-size:14px}
+  .kv dt{color:var(--muted)} .kv dd{font-weight:600}
+  .btn{width:100%;margin-top:8px;padding:14px;border-radius:12px;font-weight:700;font-size:15px;background:#f1f2f4}
   .btn.primary{background:var(--blue);color:#fff}
 
-  .connect{max-width:420px;margin:40px auto;padding:0 20px}
+  .connect{max-width:420px;margin:60px auto;padding:0 20px}
   .connect h2{font-size:22px;font-weight:800;margin-bottom:6px}
   .connect p{font-size:14px;color:#777;line-height:1.5;margin-bottom:8px}
-  .connect label{display:block;font-size:12px;color:#888;margin:12px 0 4px}
-  .connect input{width:100%;font:inherit;font-size:15px;padding:10px;border:1px solid #ddd;border-radius:10px}
-  .connect .row{display:flex;gap:8px} .connect .row .btn{flex:1}
-  .err{color:#c62e22;font-size:13px;margin-top:10px;min-height:18px}
+  .connect input{width:100%;font:inherit;font-size:20px;letter-spacing:4px;text-align:center;padding:14px;border:1px solid #ddd;border-radius:12px;margin:8px 0 10px;background:#fff}
+  .err{color:#c62e22;font-size:13px;margin-top:10px;min-height:18px;text-align:center}
+
+  @media (min-width:600px){ .tiles{grid-template-columns:repeat(4,1fr)} }
 </style>
 </head>
 <body>
 <div id="app">
   <header>
-    <h1>홈스테드<small>입실현황</small></h1>
-    <button class="ibtn" id="btnSync" title="지금 동기화">⟳</button>
-    <button class="ibtn" id="btnCfg" title="연결 설정">⚙</button>
+    <h1>홈스테드 청소 일정</h1>
+    <button class="ibtn" id="btnSync" title="새로고침">⟳</button>
+    <button class="ibtn txt" id="btnOut">나가기</button>
   </header>
-  <section class="today" id="today"></section>
+  <div class="date" id="date"></div>
+  <div class="sum" id="sum"></div>
+  <div id="floors"></div>
+
+  <div class="tlh"><h2>2주 일정</h2><span>지난 3일 · 오늘 · 앞으로 10일</span></div>
   <div class="tl-wrap" id="wrap"><div class="tl" id="tl"></div></div>
-  <div class="legend"><span>🧹 퇴실(청소)</span><span>바 = 실제 입실 (벤디트 인증)</span></div>
-  <p style="font-size:11px;color:#aaa;padding:0 14px">내일 청소 예정은 지금까지 입실한 손님 기준이라, 오늘 밤 입실이 끝나면 확정돼.</p>
+  <div class="legend"><span>🧹 퇴실(청소)하는 날</span><span>🚗 차량 등록</span><span>막대 = 실제 입실 기간</span></div>
+  <p class="note">벤디트 키오스크에서 입실 인증한 손님만 표시됩니다. 앞으로의 일정은 현재 묵고 계신 손님의 퇴실 예정만 보입니다.</p>
   <div class="stamp" id="stamp"></div>
 </div>
 <div class="sheet-bg" id="bg"></div>
@@ -97,24 +131,25 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const COLORS = ['#3B9AE8','#F0648F','#E9AE00','#1FB58C','#B44FDB','#7FBF2A','#FF8A2B','#7B828A'];
+const API = 'https://script.google.com/macros/s/AKfycbwRayqUibLasSQ94BUbcrCfeskmmLYZgy0pmalKYSCtQtiZqIS8EGwxwWcU2mn9-5yDsg/exec';
 const DEMO = new URLSearchParams(location.search).has('demo');
-const PAST = 7, DAYS = 14, LEFT = 60;
+const PAST = 3, DAYS = 14;
+const FLOORS = [ { name:'1층', rooms:['101호','102호','103호','104호'] }, { name:'2층', rooms:['201호','202호','203호','204호'] } ];
+// 객실별 고유 색 (흰 글씨가 잘 보이는 진한 톤)
+const RC = { '101호':'#2F6FED', '102호':'#E0457B', '103호':'#D97706', '104호':'#0E9F6E',
+             '201호':'#7C3AED', '202호':'#0891B2', '203호':'#DC2626', '204호':'#475569' };
 
 const store = {
   get(k){ try { return localStorage.getItem('hs_'+k) || ''; } catch(_) { return ''; } },
   set(k,v){ try { localStorage.setItem('hs_'+k, v); } catch(_){} },
+  del(k){ try { localStorage.removeItem('hs_'+k); } catch(_){} },
 };
-function importHash(){
-  if (!/api=|key=/.test(location.hash)) return false;
+(function importHash(){
+  if (!/key=/.test(location.hash)) return;
   const h = new URLSearchParams(location.hash.slice(1));
-  if (h.get('api')) store.set('api', h.get('api'));
   if (h.get('key')) store.set('key', h.get('key'));
   history.replaceState(null, '', location.pathname + location.search);
-  return true;
-}
-importHash();
-window.addEventListener('hashchange', () => { if (importHash()) { document.getElementById('connect')?.remove(); $('app').style.display=''; load(); } });
+})();
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,'0');
@@ -122,19 +157,24 @@ const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`
 const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
 const addD = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
 const diff = (a,b) => Math.round((parse(b) - parse(a)) / 864e5);
-const md = s => `${+s.slice(5,7)}/${+s.slice(8,10)}`;
-const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const W = ['일','월','화','수','목','금','토'];
+const md = s => `${+s.slice(5,7)}/${+s.slice(8,10)}`;
+const mdw = s => `${md(s)}(${W[parse(s).getDay()]})`;
+const longDT = s => s ? `${+s.slice(5,7)}월 ${+s.slice(8,10)}일(${W[parse(s.slice(0,10)).getDay()]}) ${s.slice(11)}` : '-';
+const hm = s => (s || '').slice(11);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hasCar = v => { const c = String(v.car || '').trim(); return !!c && !/없음|미방문|^-$/.test(c); };
 const css = v => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(v));
 function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1800); }
 
-let ROOMS = [], LIST = [], TODAY = ymd(new Date());
+const ROOMS = FLOORS.flatMap(f => f.rooms);
+let LIST = [], TODAY = ymd(new Date()), NOW = '';
 
 async function call(action, extra){
   if (DEMO) return MOCK[action] ? MOCK[action]() : true;
-  const api = store.get('api'), key = store.get('key');
-  if (!api || !key) throw new Error('nocfg');
-  const res = await fetch(api, { method:'POST', redirect:'follow', body: JSON.stringify(Object.assign({ key, action }, extra || {})) });
+  const key = store.get('key');
+  if (!key) throw new Error('nocfg');
+  const res = await fetch(API, { method:'POST', redirect:'follow', body: JSON.stringify(Object.assign({ key, action }, extra || {})) });
   const j = await res.json();
   if (!j.ok) throw new Error(j.error || 'fail');
   return j.data;
@@ -144,130 +184,174 @@ async function load(){
   const start = ymd(addD(parse(TODAY), -PAST)), end = ymd(addD(parse(TODAY), DAYS - PAST));
   try {
     const d = await call('data', { from: start, to: end });
-    ROOMS = d.rooms; LIST = d.list; TODAY = d.today || TODAY;
-    $('stamp').textContent = `마지막 불러옴 ${d.now}`;
+    LIST = d.list || []; TODAY = d.today || TODAY; NOW = d.now || '';
     render();
   } catch(err){
-    if (err.message === 'key' || err.message === 'nocfg') return showConnect(err.message === 'key' ? '접근키가 맞지 않음' : '');
-    toast('불러오기 실패'); console.error(err);
+    if (err.message === 'key' || err.message === 'nocfg') return showLogin(err.message === 'key' ? '비밀번호가 맞지 않습니다.' : '');
+    if (err.message === 'locked') return showLogin('비밀번호를 여러 번 틀려 10분간 잠겼습니다.');
+    toast('불러오지 못했습니다'); console.error(err);
   }
 }
 
-/** 오늘 아침 기준: 어젯밤 이전 입실 → 오늘 퇴실 = 청소 / 퇴실 내일 이후 = 연박 / 오늘 입실 = 입실 완료 */
-function todayState(){
-  const clean = [], stay = [], inNow = [], next = [];
-  const tmr = ymd(addD(parse(TODAY), 1));
-  ROOMS.forEach(room => {
-    const rs = LIST.filter(v => v.room === room);
-    const s = rs.filter(v => v.ci < TODAY && v.co >= TODAY).sort((a,b)=>a.inAt<b.inAt?1:-1)[0];
-    if (s && s.co === TODAY) clean.push(room);
-    else if (s) stay.push(room);
-    if (rs.some(v => v.ci === TODAY)) inNow.push(room);
-    // 오늘 밤 투숙(연박 + 오늘 입실) 중 내일 퇴실
-    if (rs.some(v => v.ci <= TODAY && v.co === tmr)) next.push(room);
-  });
-  return { clean, stay, inNow, next };
+/**
+ * 객실별 오늘 상태 (오늘 아침 기준)
+ *  out  : 어젯밤 이전 입실 → 오늘 퇴실 (청소)
+ *  stay : 어젯밤 이전 입실 → 내일 이후 퇴실 (연박)
+ *  inn  : 오늘 입실 인증
+ *  next : 오늘 밤 묵는 손님이 내일 퇴실
+ */
+function roomState(room){
+  const rs = LIST.filter(v => v.room === room);
+  const before = rs.filter(v => v.ci < TODAY && v.co >= TODAY).sort((a,b) => a.inAt < b.inAt ? 1 : -1)[0];
+  const out = before && before.co === TODAY ? before : null;
+  const stay = before && before.co > TODAY ? before : null;
+  const inn = rs.filter(v => v.ci === TODAY).sort((a,b) => a.inAt < b.inAt ? 1 : -1)[0] || null;
+  const tonight = stay || inn;
+  const next = !!(tonight && tonight.co === ymd(addD(parse(TODAY), 1)));
+  let key, label, sub;
+  if (out) { key = 'clean'; label = '🧹 오늘 청소';
+             sub = inn ? `새 손님 ${hm(inn.inAt)} 입실 완료` : `${md(out.ci)} 입실 · 오늘 퇴실`; }
+  else if (stay) { const total = diff(stay.ci, stay.co), day = diff(stay.ci, TODAY) + 1;
+             key = 'stay'; label = '⛔ 연박 중 · 출입금지'; sub = `${total}박 중 ${day}일차 · ${mdw(stay.co)} 퇴실`; }
+  else if (inn) { key = 'done'; label = `✓ 입실 완료 ${hm(inn.inAt)}`; sub = `${mdw(inn.co)} 퇴실 예정 (${diff(inn.ci, inn.co)}박)`; }
+  else { key = 'wait'; label = '아직 체크인 전'; sub = '오늘 입실 인증 없음'; }
+  return { key, label, sub, out, stay, inn, next, car: !!(tonight && hasCar(tonight)) };
 }
 
 function render(){
-  const t = todayState(), td = parse(TODAY);
-  const chips = (a, empty) => a.length ? `<div class="rs">${a.map(r=>`<span>${r}</span>`).join('')}</div>` : `<div class="none">${empty}</div>`;
-  const busy = new Set([...t.stay, ...t.inNow]);
-  $('today').innerHTML = `<h2>오늘 ${md(TODAY)}(${W[td.getDay()]})</h2>
-    <div class="cards">
-      <div class="card clean"><div class="k">🧹 청소 (오늘 퇴실)</div><div class="v">${t.clean.length}</div>${chips(t.clean,'없음')}</div>
-      <div class="card stay"><div class="k">⛔ 연박 (출입금지)</div><div class="v">${t.stay.length}</div>${chips(t.stay,'없음')}</div>
-      <div class="card next"><div class="k">🗓 내일 청소 예정</div><div class="v">${t.next.length}</div>${chips(t.next,'아직 없음')}</div>
-      <div class="card"><div class="k">오늘 밤 빈방</div><div class="v">${ROOMS.length - busy.size}</div>${chips(ROOMS.filter(r => !busy.has(r)), '만실')}</div>
-    </div>`;
+  const td = parse(TODAY);
+  $('date').innerHTML = `<b>오늘 ${md(TODAY)}(${W[td.getDay()]})</b><span>${NOW ? '업데이트 ' + esc(NOW.slice(11)) : ''}</span>`;
 
-  const start = addD(td, -PAST);
+  const st = {}; ROOMS.forEach(r => st[r] = roomState(r));
+  const cnt = (rooms, k) => rooms.filter(r => st[r].key === k).length;
+  const waitN = rooms => rooms.filter(r => !st[r].inn && !st[r].stay).length;
+  $('sum').innerHTML = `
+    <div class="c"><div class="k">1층 청소<br>오늘</div><div class="v">${cnt(FLOORS[0].rooms,'clean')}<small>곳</small></div></div>
+    <div class="c"><div class="k">2층 청소<br>오늘</div><div class="v">${cnt(FLOORS[1].rooms,'clean')}<small>곳</small></div></div>
+    <div><div class="k">아직 체크인 전<br>오늘 ${md(TODAY)}</div><div class="v">${waitN(ROOMS)}<small>곳</small></div></div>`;
+
+  $('floors').innerHTML = FLOORS.map(f => {
+    const c = cnt(f.rooms,'clean'), s = cnt(f.rooms,'stay'), d = f.rooms.filter(r => st[r].inn).length, w = waitN(f.rooms);
+    return `<section class="floor">
+      <div class="fh"><h2>${f.name}</h2><div class="tags">
+        <span class="tag clean">🧹 청소 ${c}</span>${s ? `<span class="tag stay">⛔ 연박 ${s}</span>` : ''}
+        ${d ? `<span class="tag done">✓ 입실 ${d}</span>` : ''}${w ? `<span class="tag wait">체크인 전 ${w}</span>` : ''}</div></div>
+      <div class="tiles">${f.rooms.map(r => { const x = st[r]; return `
+        <button class="tile ${x.key}" style="--rc:${RC[r]}" data-room="${r}">
+          <div class="rn">${r}${x.car ? '<span class="car">🚗</span>' : ''}</div>
+          ${x.next ? '<span class="badge">내일 퇴실</span>' : ''}
+          <div class="st">${esc(x.label)}</div><div class="sb">${esc(x.sub)}</div>
+        </button>`; }).join('')}</div></section>`;
+  }).join('');
+  document.querySelectorAll('.tile').forEach(b => b.onclick = () => openRoom(b.dataset.room, st[b.dataset.room]));
+
+  renderTimeline();
+  $('stamp').textContent = NOW ? `마지막 불러온 시각 ${NOW}` : '';
+}
+
+function renderTimeline(){
+  const td = parse(TODAY), start = addD(td, -PAST);
   const days = Array.from({length: DAYS}, (_,i) => addD(start, i)), ds = days.map(ymd);
   let h = '<div class="corner"></div>';
   days.forEach((d,i) => {
     const cls = ['hd', d.getDay()===0?'sun':'', d.getDay()===6?'sat':'', ds[i]===TODAY?'t':''].join(' ');
     h += `<div class="${cls}">${W[d.getDay()]}<b>${d.getDate()}</b></div>`;
   });
-  ROOMS.forEach((room, ri) => {
-    h += `<div class="rm"><span class="dot" style="background:${COLORS[ri%COLORS.length]}"></span>${room}</div>`;
-    ds.forEach(s => h += `<div class="cell ${s<TODAY?'past':''} ${s===TODAY?'t':''}"></div>`);
+  FLOORS.forEach(f => {
+    h += `<div class="fl"><span>${f.name}</span></div>`;
+    f.rooms.forEach(room => {
+      h += `<div class="rm" data-rm="${room}"><i style="background:${RC[room]}"></i>${room}</div>`;
+      ds.forEach(s => h += `<div class="cell ${s<TODAY?'past':''} ${s===TODAY?'t':''}"></div>`);
+    });
   });
   $('tl').innerHTML = h;
 
-  const colW = css('--col'), rowH = css('--rowh'), headH = css('--head');
-  // 입실 = 그 날 칸의 가운데(오후)부터, 퇴실 = 퇴실일 칸의 앞쪽(오전)까지 → 당일 퇴실·입실이 안 겹침
-  const IN = 0.5, OUT = 0.42;
+  const colW = css('--col'), rowH = css('--rowh'), left = css('--left');
+  const rowTop = {}; document.querySelectorAll('.rm').forEach(e => rowTop[e.dataset.rm] = e.offsetTop);
+  const IN = 0.5, OUT = 0.42;   // 입실 = 칸 가운데(오후), 퇴실 = 칸 앞쪽(오전)
   LIST.forEach(v => {
-    const ri = ROOMS.indexOf(v.room); if (ri < 0) return;
+    if (!(v.room in rowTop)) return;
     const s = diff(ds[0], v.ci), e = diff(ds[0], v.co);
     const x1 = Math.max(s + IN, 0), x2 = Math.min(e + OUT, DAYS);
-    const rowTop = headH + ri*rowH;
+    const top = rowTop[v.room];
     if (x2 > x1) {
       const el = document.createElement('div');
       const w = (x2 - x1) * colW - 2, n = diff(v.ci, v.co);
-      el.className = 'bar' + (s + IN < 0 ? ' contL' : '') + (w < 70 ? ' narrow' : '');
-      el.style.cssText = `left:${LEFT + x1*colW + 1}px;width:${w}px;top:${rowTop + rowH - 28 - 6}px;background:${COLORS[ri%COLORS.length]}`;
-      el.innerHTML = w < 70 ? `${n}박` : `${esc((v.inAt||'').slice(11))}<span class="sub">${n}박</span>`;
-      el.onclick = () => openDetail(v);
+      el.className = 'bar' + (s + IN < 0 ? ' contL' : '');
+      el.style.cssText = `left:${left + x1*colW + 1}px;width:${w}px;top:${top + rowH - 28 - 6}px;background:${RC[v.room]}`;
+      el.innerHTML = (hasCar(v) ? '🚗' : '') + (w < 76 ? `${n}박` : `${esc(hm(v.inAt))}<span class="sub">${n}박</span>`);
+      el.onclick = () => openStay(v);
       $('tl').appendChild(el);
     }
     if (e >= 0 && e < DAYS) {
       const m = document.createElement('div');
       m.className = 'out'; m.textContent = '🧹';
-      m.style.cssText = `left:${LEFT + e*colW + 3}px;top:${rowTop + 3}px`;
+      m.style.cssText = `left:${left + e*colW + 3}px;top:${top + 3}px`;
       $('tl').appendChild(m);
     }
   });
-  requestAnimationFrame(() => { $('wrap').scrollLeft = Math.max(0, (PAST - 2) * colW); });
+  requestAnimationFrame(() => { $('wrap').scrollLeft = 0; });
 }
 
-function openDetail(v){
-  const ri = ROOMS.indexOf(v.room);
-  $('sheet').innerHTML = `<h3><span style="width:12px;height:12px;border-radius:50%;background:${COLORS[ri%COLORS.length]}"></span>${esc(v.room)}</h3>
-    <dl class="kv">
-      <dt>입실</dt><dd>${esc(v.inAt)}</dd>
-      <dt>퇴실예정</dt><dd>${esc(v.outAt)} (${diff(v.ci, v.co)}박)</dd>
-      <dt>구분</dt><dd>${esc(v.kind || '-')}</dd>
-      <dt>벤디트</dt><dd>${esc(v.id || '-')}</dd>
-    </dl>
-    <button class="btn" id="cls">닫기</button>`;
-  $('cls').onclick = closeSheet;
-  $('bg').classList.add('on'); $('sheet').classList.add('on');
+// ── 상세 ──
+function stayCard(v, title){
+  return `<div class="sc"><div class="tt">${title}</div><dl class="kv">
+    <dt>입실</dt><dd>${esc(longDT(v.inAt))}</dd>
+    <dt>퇴실 예정</dt><dd>${esc(longDT(v.outAt))}</dd>
+    <dt>숙박</dt><dd>${diff(v.ci, v.co)}박</dd>
+    <dt>차량</dt><dd>${hasCar(v) ? '🚗 ' + esc(v.car) : '등록 안 함'}</dd>
+    <dt>입실 구분</dt><dd>${esc(v.kind || '-')}</dd>
+    <dt>벤디트 번호</dt><dd>${esc(v.id || '-')}</dd></dl></div>`;
 }
+function sheetHead(room, tagHtml){ return `<div class="grab"></div><div class="sh"><span class="sq" style="background:${RC[room]}"></span><h3>${room}</h3>${tagHtml||''}</div>`; }
+function openRoom(room, x){
+  const tag = { clean:'<span class="tag clean">🧹 오늘 청소</span>', stay:'<span class="tag stay">⛔ 연박 중</span>',
+                done:'<span class="tag done">✓ 입실 완료</span>', wait:'<span class="tag wait">체크인 전</span>' }[x.key];
+  let body = '';
+  if (x.out)  body += stayCard(x.out, '🧹 오늘 퇴실하는 손님');
+  if (x.stay) body += stayCard(x.stay, '⛔ 묵고 계신 손님 (출입금지)');
+  if (x.inn)  body += stayCard(x.inn, `✓ 오늘 ${hm(x.inn.inAt)}에 입실한 손님`);
+  if (!x.inn && !x.stay) body += `<div class="sc"><div class="tt">오늘(${md(TODAY)}) 아직 체크인 전입니다</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.5">손님이 키오스크에서 입실 인증을 하시면 자동으로 표시됩니다.</div></div>`;
+  openSheet(sheetHead(room, tag) + body + '<button class="btn" id="cls">닫기</button>');
+}
+function openStay(v){ openSheet(sheetHead(v.room) + stayCard(v, `${mdw(v.ci)} 입실 손님`) + '<button class="btn" id="cls">닫기</button>'); }
+function openSheet(html){ $('sheet').innerHTML = html; $('cls').onclick = closeSheet; $('bg').classList.add('on'); $('sheet').classList.add('on'); }
 function closeSheet(){ $('bg').classList.remove('on'); $('sheet').classList.remove('on'); }
 $('bg').onclick = closeSheet;
 
-function showConnect(msg){
+// ── 로그인 ──
+function showLogin(msg){
   $('app').style.display = 'none';
-  document.getElementById('connect')?.remove();
+  document.getElementById('login')?.remove();
   const box = document.createElement('div');
-  box.className = 'connect'; box.id = 'connect';
-  box.innerHTML = `<h2>홈스테드 입실현황 연결</h2>
-    <p>공유받은 링크로 열었다면 자동 연결돼. 직접 입력하려면 아래 두 칸.</p>
-    <label>API 주소 (Apps Script 웹앱 /exec)</label><input id="cApi" value="${esc(store.get('api'))}" placeholder="https://script.google.com/macros/s/.../exec">
-    <label>접근키</label><input id="cKey" type="password" value="${esc(store.get('key'))}">
-    <div class="row"><button class="btn" onclick="location.search='?demo'">데모 보기</button><button class="btn primary" id="cGo">연결</button></div>
-    <div class="err">${esc(msg||'')}</div>`;
+  box.className = 'connect'; box.id = 'login';
+  box.innerHTML = `<h2>홈스테드 청소 일정</h2><p>비밀번호를 입력해 주세요.</p>
+    <input id="cKey" type="password" inputmode="numeric" autocomplete="current-password" placeholder="비밀번호">
+    <button class="btn primary" id="cGo">들어가기</button><div class="err">${esc(msg||'')}</div>`;
   document.body.appendChild(box);
-  $('cGo').onclick = () => { store.set('api', $('cApi').value.trim()); store.set('key', $('cKey').value.trim());
-    box.remove(); $('app').style.display = ''; load(); };
+  const go = () => { const k = $('cKey').value.trim(); if (!k) return;
+    store.set('key', k); box.remove(); $('app').style.display = ''; load(); };
+  $('cGo').onclick = go;
+  $('cKey').onkeydown = e => { if (e.key === 'Enter') go(); };
+  setTimeout(() => $('cKey').focus(), 50);
 }
-
-$('btnCfg').onclick = () => { if (confirm('연결 정보를 다시 입력할까?')) showConnect(''); };
-$('btnSync').onclick = async () => { toast('동기화 중…'); try { await call('sync'); await load(); toast('완료'); } catch(e){ toast('동기화 실패'); } };
-document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('connect')) load(); });
+$('btnOut').onclick = () => { if (confirm('로그아웃하시겠습니까?')) { store.del('key'); showLogin(''); } };
+$('btnSync').onclick = async () => { toast('새로고침 중입니다'); try { await call('sync'); await load(); toast('최신 상태입니다'); } catch(e){ toast('새로고침하지 못했습니다'); } };
+document.addEventListener('visibilitychange', () => { if (!document.hidden && !$('login')) load(); });
 
 // ── 데모 (?demo) — 가상의 데이터 ──
 const MOCK = {
   data: () => {
     const t = new Date(), D = n => ymd(addD(t, n));
     let i = 0;
-    const V = (room, a, b, hm) => ({ id: String(9000 + (++i)), room, ci: D(a), co: D(b),
-      inAt: `${D(a)} ${hm}`, outAt: `${D(b)} 11:00`, kind: '예약입실', car: '차량없음' });
-    return { rooms:['101호','102호','103호','104호','201호','202호','203호','204호'], today: D(0), now: '데모',
-      list: [ V('101호',-1,0,'20:10'), V('101호',-4,-2,'16:30'), V('102호',-2,1,'15:40'), V('103호',-1,0,'22:05'),
-        V('103호',-5,-4,'15:00'), V('104호',0,2,'15:20'), V('201호',-1,0,'19:20'), V('201호',-6,-4,'18:00'),
-        V('202호',-3,2,'17:45'), V('203호',-5,-3,'21:10'), V('204호',0,1,'16:00'), V('204호',-2,0,'23:40') ] };
+    const V = (room, a, b, t1, car) => ({ id: String(9000 + (++i)), room, ci: D(a), co: D(b),
+      inAt: `${D(a)} ${t1}`, outAt: `${D(b)} 11:00`, kind: '예약입실', car: car || '차량없음' });
+    return { today: D(0), now: `${D(0)} 12:30`,
+      list: [ V('101호',-1,0,'20:10'), V('101호',0,1,'15:12','12가3456'), V('101호',-3,-1,'16:30'),
+              V('102호',-2,1,'15:40','34나5678'), V('103호',-1,0,'22:05'),
+              V('104호',0,2,'15:20'), V('201호',-1,0,'19:20','56다7890'), V('201호',-3,-1,'18:00'),
+              V('202호',-3,2,'17:45'), V('203호',-3,-2,'21:10'), V('204호',-2,0,'23:40'), V('204호',0,1,'16:00') ] };
   }
 };
 
