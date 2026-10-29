@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
-  :root{ --bg:#f4f5f7; --card:#fff; --line:#e9eaee; --muted:#8b8f98; --text:#1b1d22; --blue:#1565ff;
-         --clean:#1565ff; --stay:#e8590c; --done:#0f9d58; --wait:#9aa0a8; --sun:#e0402f;
+  :root{ --bg:#f4f5f7; --card:#fff; --line:#e9eaee; --muted:#6b7079; --text:#1b1d22; --blue:#1565ff;
+         --clean:#1565ff; --stay:#e8590c; --done:#0c8a4c; --wait:#b45309; --sun:#e0402f;
          --col:52px; --rowh:48px; --head:54px; --left:64px; }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--text);font-family:Pretendard,-apple-system,'Apple SD Gothic Neo',sans-serif;-webkit-text-size-adjust:100%}
@@ -37,29 +37,34 @@
   .date b{font-size:17px;font-weight:800}
   .date span{font-size:12px;color:var(--muted)}
 
-  .sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px 14px}
-  .sum > div{background:var(--card);border-radius:14px;padding:10px 12px;min-width:0}
-  .sum .k{font-size:12px;color:var(--muted);font-weight:600;line-height:1.3}
-  .sum .v{font-size:22px;font-weight:800;margin-top:2px}
-  .sum .v small{font-size:13px;font-weight:600;color:var(--muted);margin-left:2px}
-  .sum .c .v{color:var(--clean)}
+  .sum{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:0 12px 14px}
+  .sum > div{border-radius:14px;padding:10px 7px 10px 8px;min-width:0;border:1.5px solid transparent}
+  .sum .k{font-size:11.5px;font-weight:800;line-height:1.3;letter-spacing:-.5px;white-space:nowrap}
+  .sum .k em{display:block;font-style:normal;font-weight:600;font-size:11px;opacity:.75}
+  .sum .v{font-size:24px;font-weight:900;margin-top:4px;line-height:1}
+  .sum .v small{font-size:12px;font-weight:700;margin-left:1px}
+  .sum .c{background:#e8f0ff;border-color:#c9dbff} .sum .c .k,.sum .c .v{color:#1450d8}
+  .sum .w{background:#fff4e0;border-color:#ffdca3} .sum .w .k,.sum .w .v{color:#a35200}
+  .sum .d{background:#e4f6ec;border-color:#b8e6cc} .sum .d .k,.sum .d .v{color:#0a7a43}
 
   .floor{margin:0 16px 14px}
   .fh{display:flex;align-items:center;gap:8px;padding:2px 2px 8px;flex-wrap:wrap}
-  .fh h2{font-size:16px;font-weight:800}
+  .fh h2{font-size:15px;font-weight:900;color:#fff;background:#1b1d22;padding:3px 10px;border-radius:8px}
   .fh .tags{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
   .tag{font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;background:#e9ebef;color:#555;white-space:nowrap}
   .tag.clean{background:#e7efff;color:var(--clean)} .tag.stay{background:#fff0e5;color:var(--stay)}
-  .tag.done{background:#e3f5ea;color:var(--done)} .tag.wait{background:#eceef1;color:#6b7078}
+  .tag.done{background:#e3f5ea;color:var(--done)} .tag.wait{background:#fff1db;color:var(--wait)}
   .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .tile{background:var(--card);border-radius:14px;padding:12px 12px 11px;text-align:left;position:relative;overflow:hidden;min-height:98px}
   .tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--rc)}
   .tile .rn{display:flex;align-items:center;gap:6px;font-size:18px;font-weight:800;padding-left:4px}
   .tile .rn .car{font-size:14px}
   .tile .st{margin-top:6px;padding-left:4px;font-size:14px;font-weight:800}
-  .tile .sb{margin-top:3px;padding-left:4px;font-size:12px;color:var(--muted);line-height:1.4}
+  .tile .sb{margin-top:3px;padding-left:4px;font-size:12px;color:#555a63;line-height:1.4;font-weight:500}
   .tile .badge{position:absolute;right:10px;top:12px;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:#eef0ff;color:#4b5bd4}
   .tile.clean .st{color:var(--clean)} .tile.stay .st{color:var(--stay)} .tile.done .st{color:var(--done)} .tile.wait .st{color:var(--wait)}
+  .tile.clean{background:#f3f7ff} .tile.stay{background:#fff6ef} .tile.done{background:#f2fbf6} .tile.wait{background:#fffaf1}
+  .tile .rn{color:var(--rc)}
   .tile:active{transform:scale(.98)}
 
   .tlh{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 8px}
@@ -79,7 +84,7 @@
   .rm i{width:9px;height:9px;border-radius:3px;flex:none}
   .corner{position:sticky;left:0;z-index:4;background:#fff;height:var(--head);border-right:1px solid #dcdee3;border-bottom:1px solid var(--line)}
   .fl{grid-column:1 / -1;height:26px;background:#f1f2f5;border-bottom:1px solid var(--line)}
-  .fl span{position:sticky;left:8px;font-size:12px;font-weight:800;color:#555;line-height:26px;padding-left:8px}
+  .fl span{position:sticky;left:8px;font-size:12px;font-weight:900;color:#1b1d22;line-height:26px;padding-left:8px}
   .bar{position:absolute;height:28px;border-radius:8px;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;
        padding:0 6px;white-space:nowrap;overflow:hidden;z-index:2;cursor:pointer;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.08)}
   .bar.contL{border-top-left-radius:0;border-bottom-left-radius:0}
@@ -105,7 +110,7 @@
   .sc{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
   .sc .tt{font-size:13px;font-weight:800;margin-bottom:8px}
   .kv{display:grid;grid-template-columns:84px 1fr;gap:8px 10px;font-size:14px}
-  .kv dt{color:var(--muted)} .kv dd{font-weight:600}
+  .kv dt{color:var(--muted)} .kv dd{font-weight:700;color:#1b1d22}
   .btn{width:100%;margin-top:8px;padding:14px;border-radius:12px;font-weight:700;font-size:15px;background:#f1f2f4}
   .btn.primary{background:var(--blue);color:#fff}
 
@@ -264,9 +269,10 @@ function render(){
   const cnt = (rooms, k) => rooms.filter(r => st[r].key === k).length;
   const waitN = rooms => rooms.filter(r => !st[r].inn && !st[r].stay).length;
   $('sum').innerHTML = `
-    <div class="c"><div class="k">1층 청소<br>오늘</div><div class="v">${cnt(FLOORS[0].rooms,'clean')}<small>곳</small></div></div>
-    <div class="c"><div class="k">2층 청소<br>오늘</div><div class="v">${cnt(FLOORS[1].rooms,'clean')}<small>곳</small></div></div>
-    <div><div class="k">아직 체크인 전<br>오늘 ${md(TODAY)}</div><div class="v">${waitN(ROOMS)}<small>곳</small></div></div>`;
+    <div class="c"><div class="k">1층 청소<em>오늘 ${md(TODAY)}</em></div><div class="v">${cnt(FLOORS[0].rooms,'clean')}<small>곳</small></div></div>
+    <div class="c"><div class="k">2층 청소<em>오늘 ${md(TODAY)}</em></div><div class="v">${cnt(FLOORS[1].rooms,'clean')}<small>곳</small></div></div>
+    <div class="w"><div class="k">체크인 전<em>오늘 ${md(TODAY)}</em></div><div class="v">${waitN(ROOMS)}<small>곳</small></div></div>
+    <div class="d"><div class="k">체크인 완료<em>오늘 ${md(TODAY)}</em></div><div class="v">${ROOMS.filter(r => st[r].inn).length}<small>곳</small></div></div>`;
 
   $('floors').innerHTML = FLOORS.map(f => {
     const c = cnt(f.rooms,'clean'), s = cnt(f.rooms,'stay'), d = f.rooms.filter(r => st[r].inn).length, w = waitN(f.rooms);
@@ -298,7 +304,7 @@ function renderTimeline(){
   FLOORS.forEach(f => {
     h += `<div class="fl"><span>${f.name}</span></div>`;
     f.rooms.forEach(room => {
-      h += `<div class="rm" data-rm="${room}"><i style="background:${RC[room]}"></i>${room}</div>`;
+      h += `<div class="rm" data-rm="${room}" style="color:${RC[room]}"><i style="background:${RC[room]}"></i>${room}</div>`;
       ds.forEach(s => h += `<div class="cell ${s<TODAY?'past':''} ${s===TODAY?'t':''}"></div>`);
     });
   });

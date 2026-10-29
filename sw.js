@@ -1,5 +1,5 @@
 // 홈스테드 청소 일정 — 오프라인/빠른 실행용 서비스워커
-const VER = 'hs-v2.5';
+const VER = 'hs-v2.6';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
