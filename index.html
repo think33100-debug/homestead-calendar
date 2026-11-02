@@ -33,9 +33,16 @@
   .ibtn.txt{font-size:13px;color:var(--muted)}
   .ibtn:active{background:#e6e8ec}
 
-  .date{padding:0 16px 10px;display:flex;align-items:baseline;gap:8px}
-  .date b{font-size:17px;font-weight:800}
-  .date span{font-size:12px;color:var(--muted)}
+  .date{padding:0 12px 10px;display:flex;align-items:center;gap:6px}
+  .date .nv{width:40px;height:40px;border-radius:12px;background:#fff;font-size:20px;font-weight:800;color:#333;display:grid;place-items:center;flex:none}
+  .date .nv:active{background:#e6e8ec}
+  .date .dl{flex:1;text-align:center;line-height:1.2}
+  .date .dl b{font-size:18px;font-weight:900;display:block}
+  .date .dl span{font-size:11.5px;color:var(--muted)}
+  .date .dl .rel{display:inline-block;font-size:12px;font-weight:800;padding:2px 8px;border-radius:999px;background:#1b1d22;color:#fff;margin-bottom:3px}
+  .date .dl .rel.past{background:#6b7079} .date .dl .rel.fut{background:#4b5bd4}
+  .gotoday{display:block;margin:-4px auto 10px;font-size:12.5px;font-weight:800;color:var(--blue);background:#e7efff;padding:6px 14px;border-radius:999px}
+  .tile .badge.pk{background:#ffecea;color:#c62e22}
 
   .sum{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:0 12px 14px}
   .sum > div{border-radius:14px;padding:10px 7px 10px 8px;min-width:0;border:1.5px solid transparent}
@@ -61,7 +68,8 @@
   .tile .rn .car{font-size:14px}
   .tile .st{margin-top:6px;padding-left:4px;font-size:14px;font-weight:800}
   .tile .sb{margin-top:3px;padding-left:4px;font-size:12px;color:#555a63;line-height:1.4;font-weight:500}
-  .tile .badge{position:absolute;right:10px;top:12px;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:#eef0ff;color:#4b5bd4}
+  .tile .bdg{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;padding-left:4px}
+  .tile .badge{font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;background:#eef0ff;color:#4b5bd4}
   .tile.clean .st{color:var(--clean)} .tile.stay .st{color:var(--stay)} .tile.done .st{color:var(--done)} .tile.wait .st{color:var(--wait)}
   .tile.clean{background:#f3f7ff} .tile.stay{background:#fff6ef} .tile.done{background:#f2fbf6} .tile.wait{background:#fffaf1}
   .tile .rn{color:var(--rc)}
@@ -70,21 +78,23 @@
   .tlh{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 8px}
   .tlh h2{font-size:16px;font-weight:800}
   .tlh span{font-size:12px;color:var(--muted)}
-  .tl-wrap{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tl-wrap{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;touch-action:pan-y}
   .tl-wrap::-webkit-scrollbar{display:none}
-  .tl{display:grid;grid-template-columns:var(--left) repeat(14, var(--col));position:relative;width:max-content}
+  .tl{display:grid;grid-template-columns:var(--left) repeat(7, var(--col));position:relative;width:100%}
   .cell{height:var(--rowh);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
   .cell.past{background:#fafafb} .cell.t{background:#eef4ff}
   .hd{height:var(--head);display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:11px;color:var(--muted);background:#fff}
   .hd b{font-size:15px;color:var(--text);font-weight:600;line-height:1.35}
   .hd.sun,.hd.sun b{color:var(--sun)} .hd.sat,.hd.sat b{color:var(--blue)}
   .hd.t b{background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center}
-  .rm{position:sticky;left:0;z-index:3;background:#fff;height:var(--rowh);display:flex;align-items:center;gap:5px;padding-left:8px;
+  .hd.sel{box-shadow:inset 0 -3px 0 #1b1d22} .cell.sel{background:#f3f4f7} .cell.t.sel{background:#e4edff}
+  .tlh .nav2{display:flex;gap:4px} .tlh .nav2 button{width:32px;height:32px;border-radius:9px;background:#fff;font-weight:800;color:#333}
+  .rm{position:relative;left:0;z-index:3;background:#fff;height:var(--rowh);display:flex;align-items:center;justify-content:center;padding-left:3px;
       font-weight:800;font-size:13px;white-space:nowrap;border-right:1px solid #dcdee3;border-bottom:1px solid var(--line)}
   .rm i{width:9px;height:9px;border-radius:3px;flex:none}
-  .corner{position:sticky;left:0;z-index:4;background:#fff;height:var(--head);border-right:1px solid #dcdee3;border-bottom:1px solid var(--line)}
+  .corner{position:relative;left:0;z-index:4;background:#fff;height:var(--head);border-right:1px solid #dcdee3;border-bottom:1px solid var(--line)}
   .fl{grid-column:1 / -1;height:26px;background:#f1f2f5;border-bottom:1px solid var(--line)}
-  .fl span{position:sticky;left:8px;font-size:12px;font-weight:900;color:#1b1d22;line-height:26px;padding-left:8px}
+  .fl span{position:relative;font-size:12px;font-weight:900;color:#1b1d22;line-height:26px;padding-left:8px}
   .bar{position:absolute;height:28px;border-radius:8px;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;
        padding:0 6px;white-space:nowrap;overflow:hidden;z-index:2;cursor:pointer;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.08)}
   .bar.contL{border-top-left-radius:0;border-bottom-left-radius:0}
@@ -129,6 +139,9 @@
   .fm label{display:block;font-size:13px;font-weight:700;color:#444;margin:14px 0 6px}
   .fm input{width:100%;font:inherit;font-size:16px;padding:11px 12px;border:1px solid #d8dbe0;border-radius:11px;background:#fff;color:var(--text)}
   .fm .row{display:grid;grid-template-columns:1.3fr 1fr;gap:8px}
+  .fm textarea{width:100%;font:inherit;font-size:14px;line-height:1.5;padding:11px 12px;border:1px solid #d8dbe0;border-radius:11px;min-height:140px;resize:vertical}
+  .acts button.pk{background:#fff4e0;color:#a35200} .acts button.pk.hot{background:#c62e22;color:#fff}
+  .pkst{font-weight:700} .pkst.ok{color:var(--done)} .pkst.no{color:#c62e22}
   .rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
   .rooms .fl2{grid-column:1/-1;font-size:12px;font-weight:800;color:#666;margin-top:2px}
   .rooms button{padding:11px 0;border-radius:10px;font-weight:800;font-size:14px;background:#f1f2f4;color:var(--rc);border:2px solid transparent}
@@ -165,10 +178,11 @@
   <div class="sum" id="sum"></div>
   <div id="floors"></div>
 
-  <div class="tlh"><h2>2주 일정</h2><span>지난 3일 · 오늘 · 앞으로 10일</span></div>
+  <div class="tlh"><h2>주간 일정 <span id="tlRange" style="font-size:12px;font-weight:600;color:var(--muted);margin-left:4px"></span></h2>
+    <div class="nav2"><button id="wPrev">‹</button><button id="wNext">›</button></div></div>
   <div class="tl-wrap" id="wrap"><div class="tl" id="tl"></div></div>
-  <div class="legend"><span>🧹 퇴실(청소)하는 날</span><span>🚗 차량 등록</span><span>막대 = 실제 입실 기간</span></div>
-  <p class="note">벤디트 키오스크에서 입실 인증한 손님만 표시됩니다. 앞으로의 일정은 현재 묵고 계신 손님의 퇴실 예정만 보입니다.</p>
+  <div class="legend"><span>🧹 선택한 날 청소</span><span>🚗 차량 등록</span><span>막대 = 실제 입실 기간</span><span>좌우로 밀면 날짜 이동</span></div>
+  <p class="note">벤디트 키오스크 인증 또는 직접 추가한 입실만 표시됩니다. 앞으로의 일정은 현재 묵고 계신 손님의 퇴실 예정만 보입니다.</p>
   <div class="stamp" id="stamp"></div>
 </div>
 <button class="fab" id="fab">＋ 입실 추가</button>
@@ -184,7 +198,7 @@
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbwRayqUibLasSQ94BUbcrCfeskmmLYZgy0pmalKYSCtQtiZqIS8EGwxwWcU2mn9-5yDsg/exec';
 const DEMO = new URLSearchParams(location.search).has('demo');
-const PAST = 3, DAYS = 14;
+const DAYS = 7;          // 주간 일정 칸 수 (선택일 전날부터 7일)
 const FLOORS = [ { name:'1층', rooms:['101호','102호','103호','104호'] }, { name:'2층', rooms:['201호','202호','203호','204호'] } ];
 // 객실별 고유 색 (흰 글씨가 잘 보이는 진한 톤)
 const RC = { '101호':'#2F6FED', '102호':'#E0457B', '103호':'#D97706', '104호':'#0E9F6E',
@@ -220,7 +234,8 @@ const css = v => parseFloat(getComputedStyle(document.documentElement).getProper
 function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1800); }
 
 const ROOMS = FLOORS.flatMap(f => f.rooms);
-let LIST = [], TODAY = ymd(new Date()), NOW = '';
+let LIST = [], TODAY = ymd(new Date()), NOW = '', SEL = TODAY, LOADED = null, PARK_TPL = '';
+const relDay = s => { const n = diff(TODAY, s); return n === 0 ? '오늘' : n === -1 ? '어제' : n === 1 ? '내일' : md(s); };
 
 async function call(action, extra){
   if (DEMO) return MOCK[action] ? MOCK[action]() : true;
@@ -236,20 +251,22 @@ async function call(action, extra){
 const CACHE_KEY = 'hs_cache_v1';
 function readCache(){ try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch(_) { return null; } }
 function writeCache(d){ try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch(_){} }
-function apply(d){ LIST = d.list || []; TODAY = d.today || TODAY; NOW = d.now || ''; render(); }
+function apply(d, range){ LIST = d.list || []; NOW = d.now || ''; PARK_TPL = d.parkTpl || PARK_TPL;
+  if (d.today && d.today !== TODAY) { if (SEL === TODAY) SEL = d.today; TODAY = d.today; }
+  LOADED = range || LOADED; render(); }
 
 let firstPaint = false;
 async function load(){
   if (!firstPaint && !DEMO && store.get('key')) {
     const c = readCache();
-    if (c && c.today === ymd(new Date())) { apply(c); $('app').classList.add('loading'); }
+    if (c && c.today === ymd(new Date())) { apply(c, c._range); $('app').classList.add('loading'); }
     firstPaint = true;
   }
-  const start = ymd(addD(parse(TODAY), -PAST)), end = ymd(addD(parse(TODAY), DAYS - PAST));
+  const range = { from: ymd(addD(parse(SEL), -10)), to: ymd(addD(parse(SEL), 14)) };
   try {
-    const d = await call('data', { from: start, to: end });
-    if (!DEMO) writeCache(d);
-    apply(d);
+    const d = await call('data', range);
+    if (!DEMO && SEL === TODAY) writeCache(Object.assign({ _range: range }, d));
+    apply(d, range);
     $('app').classList.remove('loading');
   } catch(err){
     $('app').classList.remove('loading');
@@ -267,47 +284,58 @@ async function load(){
  *  next : 오늘 밤 묵는 손님이 내일 퇴실
  */
 function roomState(room){
+  const D = SEL, R = relDay(SEL);
   const rs = LIST.filter(v => v.room === room);
-  const before = rs.filter(v => v.ci < TODAY && v.co >= TODAY).sort((a,b) => a.inAt < b.inAt ? 1 : -1)[0];
-  const out = before && before.co === TODAY ? before : null;
-  const stay = before && before.co > TODAY ? before : null;
-  const inn = rs.filter(v => v.ci === TODAY).sort((a,b) => a.inAt < b.inAt ? 1 : -1)[0] || null;
+  const before = rs.filter(v => v.ci < D && v.co >= D).sort((a,b) => a.inAt < b.inAt ? 1 : -1)[0];
+  const out = before && before.co === D ? before : null;
+  const stay = before && before.co > D ? before : null;
+  const inn = rs.filter(v => v.ci === D).sort((a,b) => a.inAt < b.inAt ? 1 : -1)[0] || null;
   const tonight = stay || inn;
-  const next = !!(tonight && tonight.co === ymd(addD(parse(TODAY), 1)));
+  const next = !!(tonight && tonight.co === ymd(addD(parse(D), 1)));
   let key, label, sub;
-  if (out) { key = 'clean'; label = '🧹 오늘 청소';
-             sub = inn ? `새 손님 ${hm(inn.inAt)} 입실 완료` : `${md(out.ci)} 입실 · 오늘 퇴실`; }
-  else if (stay) { const total = diff(stay.ci, stay.co), day = diff(stay.ci, TODAY) + 1;
+  if (out) { key = 'clean'; label = `🧹 ${R} 청소`;
+             sub = inn ? `새 손님 ${hm(inn.inAt)} 입실 완료` : `${md(out.ci)} 입실 · ${R} 퇴실`; }
+  else if (stay) { const total = diff(stay.ci, stay.co), day = diff(stay.ci, D) + 1;
              key = 'stay'; label = '⛔ 연박 중 · 출입금지'; sub = `${total}박 중 ${day}일차 · ${mdw(stay.co)} 퇴실`; }
   else if (inn) { key = 'done'; label = `✓ 입실 완료 ${hm(inn.inAt)}`; sub = `${mdw(inn.co)} 퇴실 예정 (${diff(inn.ci, inn.co)}박)`; }
-  else { key = 'wait'; label = '아직 체크인 전'; sub = '오늘 입실 인증 없음'; }
-  return { key, label, sub, out, stay, inn, next, car: !!(tonight && hasCar(tonight)) };
+  else { key = 'wait'; label = D < TODAY ? '입실 없음' : '아직 체크인 전'; sub = `${R} 입실 인증 없음`; }
+  const carStay = [tonight, out].find(v => v && hasCar(v));
+  return { key, label, sub, out, stay, inn, next, car: !!(tonight && hasCar(tonight)),
+           parkMiss: !!(carStay && !carStay.parkReg && !carStay.parkSent) };
 }
 
 function render(){
-  const td = parse(TODAY);
-  $('date').innerHTML = `<b>오늘 ${md(TODAY)}(${W[td.getDay()]})</b><span>${NOW ? '업데이트 ' + esc(NOW.slice(11)) : ''}</span>`;
+  const R = relDay(SEL), n = diff(TODAY, SEL);
+  $('date').innerHTML = `<button class="nv" id="dPrev" aria-label="전날">‹</button>
+    <div class="dl"><span class="rel ${n<0?'past':n>0?'fut':''}">${R === md(SEL) ? (n<0 ? `${-n}일 전` : `${n}일 후`) : R}</span>
+      <b>${SEL.slice(0,4)}. ${mdw(SEL)}</b><span>${NOW ? '업데이트 ' + esc(NOW.slice(11)) : ''}</span></div>
+    <button class="nv" id="dNext" aria-label="다음날">›</button>`;
+  $('dPrev').onclick = () => go(-1); $('dNext').onclick = () => go(1);
+  document.getElementById('goToday')?.remove();
+  if (SEL !== TODAY) { const b = document.createElement('button'); b.id = 'goToday'; b.className = 'gotoday';
+    b.textContent = `오늘(${md(TODAY)})로 돌아가기`; b.onclick = () => { SEL = TODAY; ensureRange(); }; $('date').after(b); }
 
   const st = {}; ROOMS.forEach(r => st[r] = roomState(r));
   const cnt = (rooms, k) => rooms.filter(r => st[r].key === k).length;
   const waitN = rooms => rooms.filter(r => !st[r].inn && !st[r].stay).length;
   $('sum').innerHTML = `
-    <div class="c"><div class="k">1층 청소<em>오늘 ${md(TODAY)}</em></div><div class="v">${cnt(FLOORS[0].rooms,'clean')}<small>곳</small></div></div>
-    <div class="c"><div class="k">2층 청소<em>오늘 ${md(TODAY)}</em></div><div class="v">${cnt(FLOORS[1].rooms,'clean')}<small>곳</small></div></div>
-    <div class="w"><div class="k">체크인 전<em>오늘 ${md(TODAY)}</em></div><div class="v">${waitN(ROOMS)}<small>곳</small></div></div>
-    <div class="d"><div class="k">체크인 완료<em>오늘 ${md(TODAY)}</em></div><div class="v">${ROOMS.filter(r => st[r].inn).length}<small>곳</small></div></div>`;
+    <div class="c"><div class="k">1층 청소<em>${R} ${md(SEL)}</em></div><div class="v">${cnt(FLOORS[0].rooms,'clean')}<small>곳</small></div></div>
+    <div class="c"><div class="k">2층 청소<em>${R} ${md(SEL)}</em></div><div class="v">${cnt(FLOORS[1].rooms,'clean')}<small>곳</small></div></div>
+    <div class="w"><div class="k">${SEL < TODAY ? '입실 없음' : '체크인 전'}<em>${R} ${md(SEL)}</em></div><div class="v">${waitN(ROOMS)}<small>곳</small></div></div>
+    <div class="d"><div class="k">체크인 완료<em>${R} ${md(SEL)}</em></div><div class="v">${ROOMS.filter(r => st[r].inn).length}<small>곳</small></div></div>`;
 
   $('floors').innerHTML = FLOORS.map(f => {
     const c = cnt(f.rooms,'clean'), s = cnt(f.rooms,'stay'), d = f.rooms.filter(r => st[r].inn).length, w = waitN(f.rooms);
     return `<section class="floor">
       <div class="fh"><h2>${f.name}</h2><div class="tags">
         <span class="tag clean">🧹 청소 ${c}</span>${s ? `<span class="tag stay">⛔ 연박 ${s}</span>` : ''}
-        ${d ? `<span class="tag done">✓ 입실 ${d}</span>` : ''}${w ? `<span class="tag wait">체크인 전 ${w}</span>` : ''}</div></div>
+        ${d ? `<span class="tag done">✓ 입실 ${d}</span>` : ''}${w ? `<span class="tag wait">${SEL < TODAY ? '입실 없음' : '체크인 전'} ${w}</span>` : ''}
+        ${f.rooms.some(r => st[r].parkMiss) ? `<span class="tag" style="background:#ffecea;color:#c62e22">🚗 주차 미등록 ${f.rooms.filter(r => st[r].parkMiss).length}</span>` : ''}</div></div>
       <div class="tiles">${f.rooms.map(r => { const x = st[r]; return `
         <button class="tile ${x.key}" style="--rc:${RC[r]}" data-room="${r}">
           <div class="rn">${r}${x.car ? '<span class="car">🚗</span>' : ''}</div>
-          ${x.next ? '<span class="badge">내일 퇴실</span>' : ''}
           <div class="st">${esc(x.label)}</div><div class="sb">${esc(x.sub)}</div>
+          ${x.next || x.parkMiss ? `<div class="bdg">${x.next ? '<span class="badge">다음날 퇴실</span>' : ''}${x.parkMiss ? '<span class="badge pk">🚗 주차 미등록</span>' : ''}</div>` : ''}
         </button>`; }).join('')}</div></section>`;
   }).join('');
   document.querySelectorAll('.tile').forEach(b => b.onclick = () => openRoom(b.dataset.room, st[b.dataset.room]));
@@ -317,23 +345,29 @@ function render(){
 }
 
 function renderTimeline(){
-  const td = parse(TODAY), start = addD(td, -PAST);
+  const wrapW = $('wrap').clientWidth || document.documentElement.clientWidth;
+  const left = 50, colW = Math.floor((wrapW - left) / DAYS);
+  document.documentElement.style.setProperty('--left', left + 'px');
+  document.documentElement.style.setProperty('--col', colW + 'px');
+  const start = addD(parse(SEL), -1);
   const days = Array.from({length: DAYS}, (_,i) => addD(start, i)), ds = days.map(ymd);
+  $('tlRange').textContent = `${md(ds[0])} ~ ${md(ds[DAYS-1])}`;
   let h = '<div class="corner"></div>';
   days.forEach((d,i) => {
-    const cls = ['hd', d.getDay()===0?'sun':'', d.getDay()===6?'sat':'', ds[i]===TODAY?'t':''].join(' ');
-    h += `<div class="${cls}">${W[d.getDay()]}<b>${d.getDate()}</b></div>`;
+    const cls = ['hd', d.getDay()===0?'sun':'', d.getDay()===6?'sat':'', ds[i]===TODAY?'t':'', ds[i]===SEL?'sel':''].join(' ');
+    h += `<div class="${cls}" data-d="${ds[i]}">${W[d.getDay()]}<b>${d.getDate()}</b></div>`;
   });
   FLOORS.forEach(f => {
     h += `<div class="fl"><span>${f.name}</span></div>`;
     f.rooms.forEach(room => {
-      h += `<div class="rm" data-rm="${room}" style="color:${RC[room]}"><i style="background:${RC[room]}"></i>${room}</div>`;
-      ds.forEach(s => h += `<div class="cell ${s<TODAY?'past':''} ${s===TODAY?'t':''}"></div>`);
+      h += `<div class="rm" data-rm="${room}" style="color:${RC[room]};box-shadow:inset 4px 0 0 ${RC[room]}">${room}</div>`;
+      ds.forEach(s => h += `<div class="cell ${s<TODAY?'past':''} ${s===TODAY?'t':''} ${s===SEL?'sel':''}"></div>`);
     });
   });
   $('tl').innerHTML = h;
+  document.querySelectorAll('.hd[data-d]').forEach(e => e.onclick = () => { SEL = e.dataset.d; ensureRange(); });
 
-  const colW = css('--col'), rowH = css('--rowh'), left = css('--left');
+  const rowH = css('--rowh');
   const rowTop = {}; document.querySelectorAll('.rm').forEach(e => rowTop[e.dataset.rm] = e.offsetTop);
   const IN = 0.5, OUT = 0.42;   // 입실 = 칸 가운데(오후), 퇴실 = 칸 앞쪽(오전)
   LIST.forEach(v => {
@@ -346,19 +380,36 @@ function renderTimeline(){
       const w = (x2 - x1) * colW - 2, n = diff(v.ci, v.co);
       el.className = 'bar' + (s + IN < 0 ? ' contL' : '') + (isMan(v) ? ' man' : '');
       el.style.cssText = `left:${left + x1*colW + 1}px;width:${w}px;top:${top + rowH - 28 - 6}px;background:${RC[v.room]}`;
-      el.innerHTML = (hasCar(v) ? '🚗' : '') + (w < 76 ? `${n}박` : `${esc(hm(v.inAt))}<span class="sub">${n}박</span>`);
+      el.innerHTML = (hasCar(v) ? '🚗' : '') + (w < 70 ? `${n}박` : `${esc(hm(v.inAt))}<span class="sub">${n}박</span>`);
       el.onclick = () => openStay(v);
       $('tl').appendChild(el);
     }
-    if (e >= 0 && e < DAYS) {
+    if (v.co === SEL && e >= 0 && e < DAYS) {           // 빗자루는 선택한 날 청소만
       const m = document.createElement('div');
       m.className = 'out'; m.textContent = '🧹';
       m.style.cssText = `left:${left + e*colW + 3}px;top:${top + 3}px`;
       $('tl').appendChild(m);
     }
   });
-  requestAnimationFrame(() => { $('wrap').scrollLeft = 0; });
 }
+
+// ── 날짜 이동 ──
+function go(n){ SEL = ymd(addD(parse(SEL), n)); ensureRange(); }
+function ensureRange(){
+  if (LOADED && SEL >= ymd(addD(parse(LOADED.from), 2)) && ymd(addD(parse(SEL), 7)) <= LOADED.to) return render();
+  render(); $('app').classList.add('loading'); load();
+}
+$('wPrev').onclick = () => go(-7); $('wNext').onclick = () => go(7);
+(function swipe(){
+  let x0 = null, y0 = 0;
+  $('wrap').addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  $('wrap').addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
+  }, { passive: true });
+})();
+let rT; window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => LIST && renderTimeline(), 120); });
 
 // ── 상세 ──
 let CARDS = [];
@@ -370,8 +421,12 @@ function stayCard(v, title){
     <dt>숙박</dt><dd>${diff(v.ci, v.co)}박</dd>
     <dt>차량</dt><dd>${hasCar(v) ? '🚗 ' + esc(v.car) : '등록 안 함'}</dd>
     <dt>입실 구분</dt><dd>${esc(v.kind || '-')}</dd>
+    <dt>주차 등록</dt><dd>${v.parkReg ? '<span class="pkst ok">✓ 사이트 등록됨</span>'
+        : v.parkSent ? `<span class="pkst">안내 문자 보냄 ${esc(v.parkSent)}</span>`
+        : hasCar(v) ? '<span class="pkst no">✕ 미등록 (키오스크에만 차량)</span>' : '-'}</dd>
     <dt>${isMan(v) ? '등록 번호' : '벤디트 번호'}</dt><dd>${esc(v.id || '-')}</dd></dl>
-    <div class="acts"><button data-ed="${k}">퇴실일 변경</button>${isMan(v) ? `<button class="del" data-del="${k}">삭제</button>` : ''}</div>
+    <div class="acts"><button class="pk ${hasCar(v) && !v.parkReg && !v.parkSent ? 'hot' : ''}" data-pk="${k}">🚗 주차 안내 문자</button>
+      <button data-ed="${k}">퇴실일 변경</button>${isMan(v) ? `<button class="del" data-del="${k}">삭제</button>` : ''}</div>
     <div class="edit" id="ed${k}"><input type="date" value="${v.co}" min="${ymd(addD(parse(v.ci),1))}"><button data-sv="${k}">저장</button></div></div>`;
 }
 function bindCards(){
@@ -382,6 +437,7 @@ function bindCards(){
     try { await call('update', { id: v.id, room: v.room, ci: v.ci, f: { co } }); toast('퇴실일을 변경했습니다'); closeSheet(); load(); }
     catch(e){ toast('변경하지 못했습니다'); }
   });
+  document.querySelectorAll('[data-pk]').forEach(b => b.onclick = () => openParkSms(CARDS[b.dataset.pk]));
   document.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
     const v = CARDS[b.dataset.del];
     if (!confirm(`${v.room} ${mdw(v.ci)} 직접 등록 기록을 삭제하시겠습니까?`)) return;
@@ -392,13 +448,14 @@ function bindCards(){
 function sheetHead(room, tagHtml){ return `<div class="grab"></div><div class="sh"><span class="sq" style="background:${RC[room]}"></span><h3>${room}</h3>${tagHtml||''}</div>`; }
 function openRoom(room, x){
   CARDS = [];
-  const tag = { clean:'<span class="tag clean">🧹 오늘 청소</span>', stay:'<span class="tag stay">⛔ 연박 중</span>',
-                done:'<span class="tag done">✓ 입실 완료</span>', wait:'<span class="tag wait">체크인 전</span>' }[x.key];
+  const R = relDay(SEL);
+  const tag = { clean:`<span class="tag clean">🧹 ${R} 청소</span>`, stay:'<span class="tag stay">⛔ 연박 중</span>',
+                done:'<span class="tag done">✓ 입실 완료</span>', wait:`<span class="tag wait">${SEL < TODAY ? '입실 없음' : '체크인 전'}</span>` }[x.key];
   let body = '';
-  if (x.out)  body += stayCard(x.out, '🧹 오늘 퇴실하는 손님');
+  if (x.out)  body += stayCard(x.out, `🧹 ${R} 퇴실하는 손님`);
   if (x.stay) body += stayCard(x.stay, '⛔ 묵고 계신 손님 (출입금지)');
-  if (x.inn)  body += stayCard(x.inn, `✓ 오늘 ${hm(x.inn.inAt)}에 입실한 손님`);
-  if (!x.inn && !x.stay) body += `<div class="sc"><div class="tt">오늘(${md(TODAY)}) 아직 체크인 전입니다</div>
+  if (x.inn)  body += stayCard(x.inn, `✓ ${R} ${hm(x.inn.inAt)}에 입실한 손님`);
+  if (!x.inn && !x.stay) body += `<div class="sc"><div class="tt">${R}(${md(SEL)}) ${SEL < TODAY ? '입실 기록이 없습니다' : '아직 체크인 전입니다'}</div>
     <div style="font-size:13px;color:var(--muted);line-height:1.5">손님이 키오스크에서 입실 인증을 하시면 자동으로 표시됩니다.<br>키오스크를 거치지 않고 입실하셨다면 아래에서 직접 추가해 주세요.</div></div>`;
   openSheet(sheetHead(room, tag) + body + (!x.inn && !x.stay ? `<button class="btn primary" id="addHere">＋ ${room} 입실 추가</button>` : '') + '<button class="btn" id="cls">닫기</button>');
   if ($('addHere')) $('addHere').onclick = () => openAdd(room);
@@ -460,6 +517,35 @@ function openAdd(room){
 }
 $('fab').onclick = () => openAdd('');
 
+// ── 주차 안내 문자 ──
+function openParkSms(v){
+  const tpl = (PARK_TPL || '').replace(/\\n/g, '\n').replace(/\{객실\}/g, v.room);
+  CARDS = [];
+  $('sheet').innerHTML = `<div class="grab"></div><div class="sh"><span class="sq" style="background:${RC[v.room]}"></span><h3>${v.room} 주차 안내</h3></div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.5">${mdw(v.ci)} 입실 · ${hasCar(v) ? '🚗 ' + esc(v.car) : '차량 정보 없음'}<br>
+      키오스크에는 손님 번호가 없어 직접 입력해 주셔야 합니다.</p>
+    <div class="fm">
+      <label>손님 휴대폰 번호</label>
+      <input id="pPhone" type="tel" inputmode="tel" placeholder="010-0000-0000" autocomplete="off">
+      <label>보낼 문구 <span style="font-weight:500;color:var(--muted)">(수정 가능 · 기본 문구는 관리자 시트 설정 탭 '주차안내_현장')</span></label>
+      <textarea id="pText">${esc(tpl)}</textarea>
+    </div>
+    <button class="btn primary" id="pGo" style="margin-top:16px">문자 보내기</button>
+    <button class="btn" id="cls">취소</button>`;
+  $('cls').onclick = closeSheet;
+  $('bg').classList.add('on'); $('sheet').classList.add('on');
+  setTimeout(() => $('pPhone').focus(), 250);
+  $('pGo').onclick = async () => {
+    const phone = $('pPhone').value.replace(/\D/g, ''), text = $('pText').value.trim();
+    if (!/^01\d{8,9}$/.test(phone)) return toast('휴대폰 번호를 확인해 주세요');
+    if (!text) return toast('보낼 문구를 입력해 주세요');
+    if (!confirm(`${phone.replace(/(\d{3})(\d{3,4})(\d{4})/, '$1-$2-$3')} 번호로 주차 안내 문자를 보내시겠습니까?`)) return;
+    const b = $('pGo'); b.disabled = true; b.textContent = '보내는 중입니다…';
+    try { await call('parksms', { phone, text, room: v.room, ci: v.ci }); toast('주차 안내 문자를 보냈습니다'); closeSheet(); load(); }
+    catch(e){ b.disabled = false; b.textContent = '문자 보내기'; toast('보내지 못했습니다: ' + String(e.message || '').slice(0, 30)); }
+  };
+}
+
 // ── 로그인 ──
 function showLogin(msg){
   $('app').style.display = 'none';
@@ -483,15 +569,15 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden && !$
 // ── 데모 (?demo) — 가상의 데이터 ──
 let MOCK_LIST = null;
 const MOCK = {
-  add: () => true, update: () => true, delete: () => true,
+  add: () => true, update: () => true, delete: () => true, parksms: () => '성공',
   data: () => {
     const t = new Date(), D = n => ymd(addD(t, n));
     let i = 0;
     const V = (room, a, b, t1, car) => ({ id: String(9000 + (++i)), room, ci: D(a), co: D(b),
       inAt: `${D(a)} ${t1}`, outAt: `${D(b)} 11:00`, kind: '예약입실', car: car || '차량없음' });
-    return { today: D(0), now: `${D(0)} 12:30`,
+    return { today: D(0), now: `${D(0)} 12:30`, parkTpl: '[홈스테드 스테이] {객실} 고객님, 차량으로 방문해 주셔서 감사합니다.\n원활한 주차를 위해 차량 등록을 부탁드립니다.',
       list: [ V('101호',-1,0,'20:10'), V('101호',0,1,'15:12','12가3456'), V('101호',-3,-1,'16:30'),
-              V('102호',-2,1,'15:40','34나5678'), V('103호',-1,0,'22:05'),
+              Object.assign(V('102호',-2,1,'15:40','34나5678'), { parkReg: true }), V('103호',-1,0,'22:05'),
               V('104호',0,2,'15:20'), V('201호',-1,0,'19:20','56다7890'), V('201호',-3,-1,'18:00'),
               V('202호',-3,2,'17:45'), V('203호',-3,-2,'21:10'), V('204호',-2,0,'23:40'), V('204호',0,1,'16:00'),
               Object.assign(V('203호',-6,-5,'16:00'), { id: 'M00000001', kind: '직접등록 · 전화 예약' }) ] };
